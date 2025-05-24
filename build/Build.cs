@@ -346,10 +346,20 @@ public class Build : NukeBuild
                                 if (!tempExtractedFolder.DirectoryExists())
                                 {
                                     Log.Error("Failed to extract {AppImageToolFileName} to {TempBuildPath}", appImageToolFileName, tempBuildPath);
-                                    continue;
+                                    throw new InvalidOperationException($"Failed to extract {appImageToolFileName} to {tempBuildPath}");
                                 }
 
                                 tempExtractedFolder.Rename(appImageToolExtractedFolderName);
+
+                                if (appImageAppRunBinary.FileExists())
+                                {
+                                    appImageAppRunBinary.SetExecutable();
+                                }
+                                else
+                                {
+                                    Log.Error("Expected AppRun binary not found at {Path}", appImageAppRunBinary);
+                                    throw new InvalidOperationException("AppRun binary missing after extraction");
+                                }
                             }
 
                             // Create AppImage structure
