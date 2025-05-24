@@ -42,7 +42,7 @@ public class Build : NukeBuild
     public string SoftwareAuthors => field ??= Solution.NetSonar_Desktop.GetProperty("Authors")!;
 
     [field: AllowNull, MaybeNull]
-    public string SoftwareShortDescription => field ??= Solution.NetSonar_Desktop.GetProperty("ShortDescription")!;
+    public string SoftwareSummary => field ??= Solution.NetSonar_Desktop.GetProperty("Summary")!;
 
     [field: AllowNull, MaybeNull]
     public string SoftwareDescription => field ??= Solution.NetSonar_Desktop.GetProperty("Description")!;
