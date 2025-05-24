@@ -34,40 +34,8 @@ public partial class App
     {
         try
         {
-            await AppUpdater.CheckForUpdatesAsync();
-            if (AppUpdater.IsUpdateAvailable)
-            {
-                var release = AppUpdater.LatestRelease;
-
-                ToastActionButton[] buttons =
-                [
-                    new(new MaterialIconText
-                    {
-                        Kind = MaterialIconKind.Eye,
-                        Text = "View",
-                    }, toast =>
-                    {
-                        DialogManager.CreateDialog()
-                            .WithViewModel(dialog => new AppUpdateDialogModel(dialog, release))
-                            .TryShow();
-                    }, true),
-                    new(new MaterialIconText
-                    {
-                        Kind = MaterialIconKind.Close,
-                        Text = "Ignore",
-                    }, null, true),
-                ];
-                CreateToast(NotificationType.Information, $"{Software} update found",
-                    $"""
-                     Current version: {VersionString}
-                     New version: {release.TagName}
-                     Release(s) ahead: {AppUpdater.ReleasesAheadCount}
-                     Release date: {release.CreatedAt.ToLocalTime():f}
-                     """,
-                    false,
-                    buttons).Queue();
-            }
-            else if (showNoUpdateFoundMessage)
+            var updateFound = await AppUpdater.CheckForUpdatesAsync();
+            if (!updateFound && showNoUpdateFoundMessage)
             {
                 ShowToast(NotificationType.Success, "No updates available.", $"{SoftwareWithVersion} is running the latest version.");
             }
@@ -83,4 +51,41 @@ public partial class App
 
         return false;
     }
+
+    private void AppUpdaterOnUpdateFound(object? sender, EventArgs e)
+    {
+        if (!AppUpdater.IsUpdateAvailable) return;
+
+        var release = AppUpdater.LatestRelease;
+
+        ToastActionButton[] buttons =
+        [
+            new(new MaterialIconText
+            {
+                Kind = MaterialIconKind.Eye,
+                Text = "View",
+            }, toast =>
+            {
+                DialogManager.CreateDialog()
+                    .WithViewModel(dialog => new AppUpdateDialogModel(dialog, release))
+                    .TryShow();
+            }, true),
+            new(new MaterialIconText
+            {
+                Kind = MaterialIconKind.Close,
+                Text = "Ignore",
+            }, null, true),
+        ];
+        CreateToast(NotificationType.Information, $"{Software} update found",
+            $"""
+             Current version: {VersionString}
+             New version: {release.TagName}
+             Release(s) ahead: {AppUpdater.ReleasesAheadCount}
+             Release date: {release.CreatedAt.ToLocalTime():f}
+             """,
+            false,
+            buttons).Queue();
+
+    }
+
 }

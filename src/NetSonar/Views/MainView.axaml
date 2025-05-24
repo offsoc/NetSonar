@@ -140,6 +140,9 @@
                                 <MenuItem Command="{Binding OpenExecutableFolderCommand}"
                                           Header="Open executable folder"
                                           Icon="{icon:MaterialIconExt Kind=Folder}" />
+                                <MenuItem Command="{Binding TriggerNewUpdateCommand}"
+                                          Header="Trigger new update"
+                                          Icon="{icon:MaterialIconExt Kind=Update}" />
                                 <MenuItem Command="{Binding ThrowExceptionCommand}"
                                           Header="Throw exception"
                                           Icon="{icon:MaterialIconExt Kind=LightningBoltOutline}" />

@@ -61,6 +61,23 @@ public partial class MainViewModel : ViewModelBase
         SystemAware.StartProcess(AppContext.BaseDirectory);
     }
 
+    [RelayCommand]
+    public async Task TriggerNewUpdate()
+    {
+        if (App.AppUpdater.Releases.Count == 0)
+        {
+            await App.AppUpdater.CheckForUpdatesAsync();
+        }
+
+        if (App.AppUpdater.Releases.Count == 0)
+        {
+            App.ShowToast("Unable to trigger new update", "No available releases to trigger the new update.");
+            return;
+        }
+        var release = App.AppUpdater.Releases[0];
+        App.AppUpdater.ForceTriggerUpdateFromRelease(release);
+    }
+
 
     [RelayCommand]
     public void ThrowException()

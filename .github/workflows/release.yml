@@ -1,0 +1,132 @@
+name: 🚀 Publish Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag_version:
+        description: 'Semantic version (e.g., 1.0.0 or v1.0.0)'
+        required: true
+        type: string
+      dry_run:
+        description: 'Run without creating tag/release'
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  validate_tag:
+    name: '🔍 Validate Tag'
+    runs-on: ubuntu-latest
+    outputs:
+      normalized_tag: ${{ steps.validate.outputs.normalized_tag }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          clean_version="${INPUT_VERSION#v}"
+          if [[ ! "$clean_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$ ]]; then
+            echo "::error::Invalid semantic version"
+            exit 1
+          fi
+          echo "normalized_tag=v${clean_version}" >> $GITHUB_OUTPUT
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.tag_version }}
+
+  create_tag:
+    name: '🏷️ Create Tag'
+    needs: validate_tag
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git tag ${{ needs.validate_tag.outputs.normalized_tag }}
+          git push origin ${{ needs.validate_tag.outputs.normalized_tag }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  build:
+    name: '🛠️ Build (${{ matrix.rid }})'
+    needs: validate_tag
+    strategy:
+      matrix:
+        include:
+          - rid: win-x64
+            os: windows-latest
+          - rid: linux-x64
+            os: ubuntu-latest
+          - rid: linux-arm64
+            os: ubuntu-latest-arm64
+          - rid: osx-x64
+            os: macos-latest
+          - rid: osx-arm64
+            os: macos-latest-arm64
+
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '9.0.x'
+
+      - run: dotnet tool install Nuke.GlobalTool --global
+      - run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - run: nuke publish --rids ${{ matrix.rid }} --publish-discard-non-bundles
+
+      - name: Upload release assets
+        if: success() && !contains(steps.build.outputs.*, 'Skipped')
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.rid }}
+          path: |
+            artifacts/publish/*.zip
+            artifacts/publish/*.AppImage
+            artifacts/publish/*.msi
+          if-no-files-found: error
+
+  create_release:
+    name: '🎉 Create Release'
+    needs: build
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: repo
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Extract changelog
+        id: changelog
+        run: |
+          # Find the version section in CHANGELOG.md
+          VERSION="${{ needs.validate_tag.outputs.normalized_tag }}"
+          CHANGELOG_CONTENT=$(awk -v version="$VERSION" '
+            BEGIN { print=0 }
+            /^## \[/ {
+              if ($0 ~ "\\[" version "\\]") { print=1; next }
+              else if (print) { exit }
+            }
+            print { print }
+          ' repo/CHANGELOG.md)
+
+          # Escape for GitHub output
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//'%'/'%25'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\n'/'%0A'}"
+          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\r'/'%0D'}"
+
+          echo "changelog=${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ needs.validate_tag.outputs.normalized_tag }}
+          name: Release ${{ needs.validate_tag.outputs.normalized_tag }}
+          body: ${{ steps.changelog.outputs.changelog }}
+          files: release-artifacts/**/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

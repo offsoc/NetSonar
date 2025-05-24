@@ -144,6 +144,7 @@ public partial class App : Application
                     MainWindow = (Views.CreateView<MainViewModel>(ServicesProvider) as Window)!;
                     desktop.MainWindow = MainWindow;
                     desktop.Exit += DesktopOnExit;
+                    AppUpdater.UpdateFound += AppUpdaterOnUpdateFound;
                 }
                 else if (ApplicationLifetime is ISingleViewApplicationLifetime singleViewPlatform)
                 {
