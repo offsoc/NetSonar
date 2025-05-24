@@ -44,7 +44,18 @@ public class Build : NukeBuild
     public string SoftwareDescription => field ??= Solution.NetSonar_Desktop.GetProperty("Description")!;
 
     [field: AllowNull, MaybeNull]
-    public string SoftwareVersion => field ??= Solution.NetSonar_Desktop.GetProperty("Version")!;
+    public string SoftwareVersion
+    {
+        get
+        {
+            if (field is null)
+            {
+                field ??= Solution.NetSonar_Desktop.GetProperty("Version")!;
+                if (field.EndsWith("-dev")) field = field[..^4];
+            }
+            return field;
+        }
+    }
 
     [field: AllowNull, MaybeNull]
     public string SoftwareCopyright => field ??= Solution.NetSonar_Desktop.GetProperty("Copyright")!;
@@ -318,9 +329,13 @@ public class Build : NukeBuild
                                 appImageToolPath.SetExecutable();
                             }
 
-                            if (!appImageToolExtractedPath.DirectoryExists())
+                            if (File.Exists("/dev/fuse"))
                             {
-                                // Extract AppImage so it can be run in Docker containers and on  machines that don't have FUSE installed
+                                appImageAppRunBinary = appImageToolPath;
+                            }
+                            else if (!appImageToolExtractedPath.DirectoryExists())
+                            {
+                                // Extract AppImage so it can be run in Docker containers and on machines that don't have FUSE installed
                                 // Note: Extracting requires libglib2.0-0 to be installed
                                 ProcessTasks.StartShell($"./{appImageToolFileName} --appimage-extract", tempBuildPath);
                                 var tempExtractedFolder = tempBuildPath / "squashfs-root";
