@@ -99,53 +99,47 @@ public static class LinuxAppBundle
     public static string GetAppImageAppDataXmlFile(Build build)
     {
         return $"""
-                <?xml version="1.0" encoding="UTF-8"?>
-                <component type="desktop-application">
-                  <id>{build.SoftwareRDNS}</id>
+               <?xml version="1.0" encoding="UTF-8"?>
+               <component type="desktop-application">
+                 <id>{build.SoftwareRDNS}</id>
 
-                  <name>{build.SoftwareName}</name>
-                  <metadata_license>FSFAP</metadata_license>
-                  <project_license>{build.SoftwareLicense}</project_license>
-                  <content_rating type="oars-1.0" />
-                  <summary>{Regex.Replace(build.SoftwareDescription, @"\r\n?|\n", " ", RegexOptions.Multiline).Replace('.', ';')}</summary>
+                 <name>{build.SoftwareName}</name>
+                 <metadata_license>FSFAP</metadata_license>
+                 <project_license>{build.SoftwareLicense}</project_license>
+                 <content_rating type="oars-1.0" />
+                 <summary>{Regex.Replace(build.SoftwareDescription, @"\r\n?|\n", " ", RegexOptions.Multiline).Replace('.', ';')}</summary>
 
-                  <description>
-                    <p>{build.SoftwareDescription}</p>
-                  </description>
+                 <description>
+                   <p>{build.SoftwareDescription}</p>
+                 </description>
 
-                  <categories>
-                    <category>Network</category>
-                    <category>Monitor</category>
-                  </categories>
+                 <categories>
+                   <category>Network</category>
+                   <category>Monitor</category>
+                 </categories>
 
-                  <supports>
-                    <control>pointing</control>
-                    <control>keyboard</control>
-                    <control>touch</control>
-                  </supports>
+                 <supports>
+                   <control>pointing</control>
+                   <control>keyboard</control>
+                   <control>touch</control>
+                 </supports>
 
-                  <recommends>
-                    <display_length compare="ge">760</display_length>
-                  </recommends>
+                 <recommends>
+                   <display_length compare="ge">760</display_length>
+                 </recommends>
 
-                  <launchable type="desktop-id">{build.SoftwareRDNS}.desktop</launchable>
+                 <launchable type="desktop-id">{build.SoftwareRDNS}.desktop</launchable>
 
-                  <url type="homepage">{build.SoftwareRepositoryUrl}</url>
+                 <url type="homepage">{build.SoftwareRepositoryUrl}</url>
+                 <developer_name>{build.SoftwareAuthors}</developer_name>
+                 <update_contact>tiago_caza_AT_hotmail.com</update_contact>
 
-                  <developer>
-                    <name>{build.SoftwareAuthors}</name>
-                    <email>tiago_caza_AT_hotmail.com</email>
-                    <url>{build.SoftwareRepositoryUrl}</url>
-                  </developer>
+                 <provides>
+                   <binary>{build.SoftwareName}</binary>
+                 </provides>
 
-                  <update_contact>tiago_caza_AT_hotmail.com</update_contact>
-
-                  <provides>
-                    <binary>{build.SoftwareName}</binary>
-                  </provides>
-
-                </component>
-                """;
+               </component>
+               """;
     }
 
     public static bool IsFuseAvailable()
