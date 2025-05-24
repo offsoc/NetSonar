@@ -1,0 +1,41 @@
+﻿<Project Sdk="WixToolset.Sdk/6.0.0">
+  <PropertyGroup>
+    <Platform Condition="'$(Platform)' == ''">x64</Platform>
+    <OutputName>$(ProductName)_win-$(Platform)_v$(AssemblyVersion)</OutputName>
+    <OutputPath>$(ArtifactsPath)\bin\$(ProductName).MsiInstaller\$(Configuration)_$(Platform)</OutputPath>
+    <SignOutput>true</SignOutput>
+    <HarvestPath Condition="'$(HarvestPath)' == ''">$(CommonPublishDir)\$(OutputName)</HarvestPath>
+    <HarvestDirectoryAutogenerateGuids>true</HarvestDirectoryAutogenerateGuids>
+    <DefineConstants>
+            Company=$(Company);
+            Authors=$(Authors);
+            ProductName=$(ProductName);
+            ProductVersion=$(AssemblyVersion);
+            ProductDescription=$(Description);
+            RepositoryUrl=$(RepositoryUrl);
+            HarvestPath=$(HarvestPath)
+        </DefineConstants>
+    <WixVariables>WixUIBannerBmp=Resources\Banner.jpg;WixUIDialogBmp=Resources\Dialog.jpg;WixUILicenseRtf=Resources\EULA.rtf</WixVariables>
+    <SuppressIces>ICE27;ICE38;ICE43;ICE57</SuppressIces>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DefineConstants>Debug;$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Resources\Banner.fw.png" />
+    <Content Include="Resources\Banner.jpg" />
+    <Content Include="Resources\Dialog.fw.png" />
+    <Content Include="Resources\Dialog.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\EULA.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.0" />
+    <PackageReference Include="WixToolset.Iis.wixext" Version="6.0.0" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.0" />
+  </ItemGroup>
+  <Target Name="ShowReservedProperties" AfterTargets="BeforeBuild">
+    <Message Text=" HarvestPath = $(HarvestPath)" Importance="high" />
+  </Target>
+</Project>

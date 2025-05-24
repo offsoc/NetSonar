@@ -1,0 +1,105 @@
+<Project>
+    <PropertyGroup>
+        <!-- Project -->
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+        <LangVersion>preview</LangVersion>
+        <NoWarn>CS8002</NoWarn>
+
+        <!-- Metadata -->
+        <ProductName>NetSonar</ProductName>
+        <Company>PTRTECH</Company>
+        <CompanyRDNS>pt.ptrtech</CompanyRDNS>
+        <Authors>Tiago Conceição</Authors>
+        <Copyright>Copyright 2025-$([System.DateTime]::Now.ToString(`yyyy`)) © $(Company)</Copyright>
+        <Description>NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), managing network interfaces, and discovering local devices/services.
+Features multi-protocol latency checks, subnet scanning, port/service detection, and real-time interface configuration.
+Designed for administrators and developers needing lightweight, cross-platform network analysis.</Description>
+
+        <!-- Package -->
+        <ApplicationIcon>$(MSBuildThisFileDirectory)media\$(ProductName).ico</ApplicationIcon>
+        <RepositoryType>Git</RepositoryType>
+        <RepositoryUrl>https://github.com/sn4k3/NetSonar</RepositoryUrl>
+        <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
+        <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+
+        <Version>0.0.1</Version>
+        <PackageTags>Network;Diagnostics;Monitoring;ICMP;TCP;UDP;HTTP;Ping;Port-Scanning;Service-Discovery;Subnet-Scanner;Network-Management;Network-Interfaces;Cross-Platform;Admin;DevOps;IT;Tools</PackageTags>
+
+        <!-- Set the path map and artifacts path. -->
+        <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+        <ArtifactsPath>$(MSBuildThisFileDirectory)artifacts</ArtifactsPath>
+        <CommonPublishDir>$(ArtifactsPath)\publish</CommonPublishDir>
+
+        <!-- Enable Build Acceleration in Visual Studio. -->
+        <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
+
+        <!-- Sign -->
+        <SignAssembly>True</SignAssembly>
+        <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)$(ProductName).snk</AssemblyOriginatorKeyFile>
+
+        <!-- Avalonia -->
+        <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+        <AvaloniaVersion>11.3.0</AvaloniaVersion>
+
+        <!-- MvvmToolkit -->
+        <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>
+
+        <!-- Other variables -->
+        <BuildRuntimeCacheFileName>buildruntime.json</BuildRuntimeCacheFileName>
+
+    </PropertyGroup>
+
+    <!-- Assembly Information -->
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+            <_Parameter1>Authors</_Parameter1>
+            <_Parameter2>$(Authors)</_Parameter2>
+        </AssemblyAttribute>
+    </ItemGroup>
+
+    <!-- GitHub Actions -->
+    <PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+        <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    </PropertyGroup>
+
+    <!-- TestOSDetectCore2.0 -->
+    <!-- https://github.com/Balnian/TestOSDetectCore2.0 -->
+    <!-- OS Detection default Value  -->
+    <PropertyGroup>
+        <IsWindows>False</IsWindows>
+        <IsOSX>False</IsOSX>
+        <IsAndroid>False</IsAndroid>
+        <IsLinux>False</IsLinux>
+    </PropertyGroup>
+
+    <!-- Check if we target Windows -->
+    <PropertyGroup Condition="($(RuntimeIdentifier.StartsWith('win')) And !$(RuntimeIdentifier.Equals('')) ) Or ( $(OS.Equals('Windows_NT')) And $(RuntimeIdentifier.Equals('')) ) ">
+        <!--Replacing '-' and '.' by '_' in Constants because we cannot use those characters in the source files -->
+        <DefineConstants>_WINDOWS_, $(RuntimeIdentifier.Replace("-","_").Replace(".","_"))</DefineConstants>
+        <IsWindows>True</IsWindows>
+    </PropertyGroup>
+
+    <!-- Check if we target OSX -->
+    <PropertyGroup Condition="($(RuntimeIdentifier.StartsWith('osx')) And !$(RuntimeIdentifier.Equals('')) ) Or ( $([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX))) And $(RuntimeIdentifier.Equals('')) ) ">
+        <!--Replacing '-' and '.' by '_' in Constants because we cannot use those characters in the source files -->
+        <DefineConstants>_OSX_, $(RuntimeIdentifier.Replace("-","_").Replace(".","_"))</DefineConstants>
+        <IsOSX>True</IsOSX>
+    </PropertyGroup>
+
+    <!-- Check if we target Android (Doesn't Detect properly for now but is Official: https://docs.microsoft.com/en-us/dotnet/core/rid-catalog) -->
+    <!-- (Less check to do because we consider we cannot Dev on Android and anyway there's no way to detect an Android Platform other then the RID) -->
+    <PropertyGroup Condition="$(RuntimeIdentifier.StartsWith('android')) ">
+        <!--Replacing '-' and '.' by '_' in Constants because we cannot use those characters in the source files -->
+        <DefineConstants>_ANDROID_, $(RuntimeIdentifier.Replace("-","_").Replace(".","_"))</DefineConstants>
+        <IsAndroid>True</IsAndroid>
+    </PropertyGroup>
+
+    <!-- Check if we target Linux (To many name to check, instead we check if not one of the other OS) -->
+    <PropertyGroup Condition=" !$(IsWindows) And !$(IsOSX) And !$(IsAndroid)">
+        <!--Replacing '-' and '.' by '_' in Constants because we cannot use those characters in the source files -->
+        <DefineConstants>_LINUX_, $(RuntimeIdentifier.Replace("-","_").Replace(".","_"))</DefineConstants>
+        <IsLinux>True</IsLinux>
+    </PropertyGroup>
+</Project>

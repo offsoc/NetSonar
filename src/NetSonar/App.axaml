@@ -1,0 +1,32 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:converters="clr-namespace:NetSonar.Avalonia.Converters"
+             xmlns:materialIcons="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+             x:Class="NetSonar.Avalonia.App"
+             RequestedThemeVariant="Default">
+    <!-- "Default" ThemeVariant follows system theme variant. "Dark" or "Light" are other available options. -->
+
+    <Application.Resources>
+        <converters:RawEnumToCollectionConverter x:Key="RawEnumToCollectionConverter" />
+        <converters:FromStringToEnumConverter x:Key="FromStringToEnumConverter" />
+        <converters:EnumToCollectionConverter x:Key="EnumToCollectionConverter" />
+        <converters:FromValueDescriptionToEnumConverter x:Key="FromValueDescriptionToEnumConverter" />
+        <converters:FileSizeNormalizeConverter x:Key="FileSizeNormalize" />
+        <converters:InternetSpeedNormalizeConverter x:Key="InternetSpeedNormalize" />
+        <converters:BoolErrorGridRowBackgroundConverter x:Key="BoolErrorGridRowBackground" />
+        <FluentTheme x:Key="FluentTheme">
+            <FluentTheme.Palettes>
+                <ColorPaletteResources x:Key="Light"/>
+                <ColorPaletteResources x:Key="Dark"/>
+            </FluentTheme.Palettes>
+        </FluentTheme>
+    </Application.Resources>
+    <Application.Styles>
+
+        <suki:SukiTheme ThemeColor="Blue"/>
+        <materialIcons:MaterialIconStyles />
+        <!--<StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Simple.xaml"/>-->
+        <StyleInclude Source="avares://NetSonar.Avalonia/Assets/Styles/AppStyles.axaml"/>
+    </Application.Styles>
+</Application>

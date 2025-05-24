@@ -1,0 +1,161 @@
+<controls:UserControlBase x:Class="NetSonar.Avalonia.Views.MainView"
+                          xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:app="clr-namespace:NetSonar.Avalonia"
+                          xmlns:controls="clr-namespace:NetSonar.Avalonia.Controls"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                          xmlns:viewModels="clr-namespace:NetSonar.Avalonia.ViewModels"
+                          d:DesignHeight="450"
+                          d:DesignWidth="800"
+                          x:DataType="viewModels:MainViewModel"
+                          mc:Ignorable="d">
+    <suki:SukiSideMenu IsMenuExpanded="{Binding AppSettings.IsSideMenuExpanded}"
+                       IsSearchEnabled="False"
+                       ItemsSource="{Binding Pages}"
+                       SelectedItem="{Binding ActivePage}">
+        <suki:SukiSideMenu.Styles>
+            <Style Selector="Image.AppIcon">
+                <Setter Property="Transitions">
+                    <Transitions>
+                        <DoubleTransition Property="Opacity"
+                                          Duration="0.1" />
+                    </Transitions>
+                </Setter>
+                <Style Selector="^:pointerover">
+                    <Setter Property="Opacity" Value="0.5" />
+                </Style>
+            </Style>
+        </suki:SukiSideMenu.Styles>
+        <suki:SukiSideMenu.ItemTemplate>
+            <DataTemplate>
+                <suki:SukiSideMenuItem Classes="Compact"
+                                       Header="{Binding DisplayName}"
+                                       IsVisible="{Binding IsVisibleOnSideMenu}">
+                    <suki:SukiSideMenuItem.Icon>
+                        <icon:MaterialIcon Kind="{Binding Icon}" />
+                    </suki:SukiSideMenuItem.Icon>
+                </suki:SukiSideMenuItem>
+            </DataTemplate>
+        </suki:SukiSideMenu.ItemTemplate>
+        <suki:SukiSideMenu.HeaderContent>
+            <!--
+            <Image Width="80"
+                   Height="80"
+                   Margin="30,10,30,30"
+                   Classes="AppIcon"
+                   IsVisible="{Binding $parent[suki:SukiWindow].((demo:SukiUIDemoViewModel)DataContext).TitleBarVisible}"
+                   PointerPressed="InputElement_OnPointerPressed"
+                   Source="Assets/OIG.N5o-removebg-preview.png"
+
+                   ToolTip.Tip="Click To Toggle Top Menu." />
+                   !-->
+        </suki:SukiSideMenu.HeaderContent>
+        <suki:SukiSideMenu.FooterContent>
+            <StackPanel HorizontalAlignment="Center"
+                        Orientation="Horizontal"
+                        Spacing="5">
+                <Button Classes="Icon"
+                        Command="{Binding LaunchUriCommand}"
+                        CommandParameter="https://github.com/sn4k3/NetSonar"
+                        Content="{icon:MaterialIconExt Kind=Github,
+                                                       Size=25}" />
+
+                <Button Classes="Icon"
+                        Content="{icon:MaterialIconExt Kind=Lifebuoy,
+                                                       Size=25}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuItem Command="{Binding ShowAboutDialogCommand}"
+                                      Header="About"
+                                      Icon="{icon:MaterialIconExt Kind=AboutOutline}"
+                                      InputGesture="F1" />
+                            <MenuItem Command="{Binding LaunchUriCommand}"
+                                      CommandParameter="https://github.com/sn4k3/NetSonar"
+                                      Header="Website"
+                                      Icon="{icon:MaterialIconExt Kind=MicrosoftEdge}" />
+
+                            <MenuItem Header="Community forums"
+                                      Icon="{icon:MaterialIconExt Kind=ConversationOutline}">
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://github.com/sn4k3/NetSonar/discussions"
+                                          Header="Github"
+                                          Icon="{icon:MaterialIconExt Kind=Github}" />
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://www.reddit.com/search/?q=NetSonar&amp;type=posts&amp;sort=new"
+                                          Header="Reddit"
+                                          Icon="{icon:MaterialIconExt Kind=Reddit}" />
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://x.com/search?q=NetSonar&amp;src=typed_query&amp;f=live"
+                                          Header="Twitter"
+                                          Icon="{icon:MaterialIconExt Kind=Twitter}" />
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://www.youtube.com/results?search_query=NetSonar"
+                                          Header="Youtube"
+                                          Icon="{icon:MaterialIconExt Kind=Youtube}" />
+                            </MenuItem>
+
+                            <MenuItem Header="Donate"
+                                      Icon="{icon:MaterialIconExt Kind=DonateOutline}">
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://github.com/sponsors/sn4k3"
+                                          Header="Github"
+                                          Icon="{icon:MaterialIconExt Kind=Github}" />
+                                <MenuItem Command="{Binding LaunchUriCommand}"
+                                          CommandParameter="https://www.paypal.com/donate/?hosted_button_id=3F9DKDNPWEYR6"
+                                          Header="PayPal"
+                                          Icon="P" />
+                            </MenuItem>
+
+                            <Separator />
+
+                            <MenuItem Command="{Binding LaunchUriCommand}"
+                                      CommandParameter="https://github.com/sn4k3/NetSonar/discussions/categories/q-a"
+                                      Header="Ask a question"
+                                      Icon="{icon:MaterialIconExt Kind=QuestionMark}" />
+                            <MenuItem Command="{Binding LaunchUriCommand}"
+                                      CommandParameter="https://github.com/sn4k3/NetSonar/issues"
+                                      Header="Report an issue"
+                                      Icon="{icon:MaterialIconExt Kind=BugOutline}" />
+                            <MenuItem Command="{Binding LaunchUriCommand}"
+                                      CommandParameter="https://github.com/sn4k3/NetSonar/discussions/categories/ideas"
+                                      Header="Suggest an improvement or feature"
+                                      Icon="{icon:MaterialIconExt Kind=HeadLightbulbOutline}" />
+
+                            <Separator />
+
+                            <MenuItem Command="{Binding OpenProfileFolderCommand}"
+                                      Header="Open profile folder"
+                                      Icon="{icon:MaterialIconExt Kind=FolderOutline}" />
+
+                            <MenuItem Command="{Binding CheckForUpdatesCommand}"
+                                      Header="Check for updates"
+                                      Icon="{icon:MaterialIconExt Kind=Update}" />
+
+                            <MenuItem Header="Debug"
+                                      Icon="{icon:MaterialIconExt Kind=BugCheckOutline}"
+                                      IsVisible="{Binding Source={x:Static app:App.IsDebug}}">
+                                <MenuItem Command="{Binding OpenExecutableFolderCommand}"
+                                          Header="Open executable folder"
+                                          Icon="{icon:MaterialIconExt Kind=Folder}" />
+                                <MenuItem Command="{Binding ThrowExceptionCommand}"
+                                          Header="Throw exception"
+                                          Icon="{icon:MaterialIconExt Kind=LightningBoltOutline}" />
+                            </MenuItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button Classes="Icon"
+                        Command="{Binding ShowSettingsCommandCommand}"
+                        Content="{icon:MaterialIconExt Kind=Cog,
+                                                       Size=25}" />
+
+            </StackPanel>
+        </suki:SukiSideMenu.FooterContent>
+    </suki:SukiSideMenu>
+    <!--<views:MainPingView/>!-->
+
+</controls:UserControlBase>

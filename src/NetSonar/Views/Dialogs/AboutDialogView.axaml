@@ -1,0 +1,167 @@
+<controls:UserControlBase x:Class="NetSonar.Avalonia.Views.Dialogs.AboutDialogView"
+                          xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:app="clr-namespace:NetSonar.Avalonia"
+                          xmlns:controls="clr-namespace:NetSonar.Avalonia.Controls"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:dialogs="clr-namespace:NetSonar.Avalonia.ViewModels.Dialogs"
+                          xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                          xmlns:updatum="clr-namespace:Updatum;assembly=Updatum"
+                          d:DesignHeight="650"
+                          d:DesignWidth="1000"
+                          x:DataType="dialogs:AboutDialogModel"
+                          mc:Ignorable="d">
+    <Design.DataContext>
+        <dialogs:AboutDialogModel />
+    </Design.DataContext>
+
+    <suki:SukiMessageBoxHost Classes="AppPanel">
+        <suki:SukiMessageBoxHost.FooterLeftItemsSource>
+            <Button Command="{Binding CopyInformationToClipboardCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=ContentCopy,
+                                                       Text='Copy'}"
+                    IsVisible="{Binding !IsContentCopied}" />
+
+            <Button Classes="Success"
+                    Content="{icon:MaterialIconTextExt Kind=Check,
+                                                       Text='Copied'}"
+                    IsVisible="{Binding IsContentCopied}" />
+        </suki:SukiMessageBoxHost.FooterLeftItemsSource>
+        <suki:SukiMessageBoxHost.ActionButtonsSource>
+            <Button Classes="Flat"
+                    Command="{Binding CloseDialogCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=CloseBold,
+                                                       Text=Close}"
+                    IsCancel="True" />
+        </suki:SukiMessageBoxHost.ActionButtonsSource>
+        <DockPanel HorizontalSpacing="20">
+            <Grid MaxWidth="380"
+                  ColumnDefinitions="*"
+                  DockPanel.Dock="Left"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto"
+                  RowSpacing="10">
+                <TextBox Grid.Row="0"
+                         Grid.Column="0"
+                         Classes="ReadOnly"
+                         Text="{Binding OperativeSystemDescription}"
+                         UseFloatingWatermark="True"
+                         Watermark="Operative System:" />
+
+                <TextBox Grid.Row="1"
+                         Grid.Column="0"
+                         Classes="ReadOnly"
+                         Text="{Binding GraphicCardName}"
+                         UseFloatingWatermark="True"
+                         Watermark="Graphic Card:" />
+
+                <TextBox Grid.Row="2"
+                         Grid.Column="0"
+                         Classes="ReadOnly"
+                         Text="{Binding ProcessorName}"
+                         UseFloatingWatermark="True"
+                         Watermark="Processor:" />
+
+                <Grid Grid.Row="3"
+                      Grid.Column="0"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="5"
+                      RowDefinitions="Auto">
+                    <TextBox Grid.Row="0"
+                             Grid.Column="0"
+                             Classes="ReadOnly"
+                             Text="{Binding ProcessorCount}"
+                             UseFloatingWatermark="True"
+                             Watermark="Processor cores:" />
+
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Classes="ReadOnly"
+                             Text="{Binding MemoryRamDescription}"
+                             UseFloatingWatermark="True"
+                             Watermark="Memory RAM:" />
+                </Grid>
+
+                <Grid Grid.Row="4"
+                      Grid.Column="0"
+                      ColumnDefinitions="*,*"
+                      ColumnSpacing="5"
+                      RowDefinitions="Auto">
+                    <TextBox Grid.Row="0"
+                             Grid.Column="0"
+                             Classes="ReadOnly"
+                             Text="{Binding FrameworkDescription}"
+                             UseFloatingWatermark="True"
+                             Watermark="Framework:" />
+
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Classes="ReadOnly"
+                             Text="{Binding AvaloniaUIDescription}"
+                             UseFloatingWatermark="True"
+                             Watermark="AvaloniaUI:" />
+                </Grid>
+
+                <TextBox Grid.Row="5"
+                         Grid.Column="0"
+                         Classes="ReadOnly"
+                         Text="{Binding ScreensDescription, FallbackValue='(Screen information not available)'}"
+                         UseFloatingWatermark="True"
+                         Watermark="Screens, resolution, working area, usable area:" />
+
+            </Grid>
+
+            <Grid ColumnDefinitions="*"
+                  RowDefinitions="Auto,Auto,Auto,Auto,*"
+                  RowSpacing="8">
+                <SelectableTextBlock Grid.Row="0"
+                                     Classes="h5"
+                                     FontWeight="Bold"
+                                     Text="{Binding Source={x:Static app:App.SoftwareWithVersionRuntime}}" />
+                <SelectableTextBlock Grid.Row="1"
+                                     Text="{Binding Source={x:Static app:App.AgeShortStr}, StringFormat='Age: {0}'}" />
+                <SelectableTextBlock Grid.Row="2"
+                                     Text="{Binding Source={x:Static updatum:EntryApplication.AssemblyCopyright}}" />
+                <SelectableTextBlock Grid.Row="3"
+                                     Text="{Binding Source={x:Static app:App.Authors}}" />
+
+                <Svg Grid.Row="0"
+                     Grid.RowSpan="4"
+                     Height="94"
+                     HorizontalAlignment="Right"
+                     VerticalAlignment="Center"
+                     Path="/Assets/NetSonar.svg" />
+
+                <TabControl Grid.Row="4"
+                            Width="560"
+                            MaxHeight="335"
+                            VerticalAlignment="Top">
+                    <TabItem Header="Description">
+                        <TextBox MinHeight="310"
+                                 VerticalContentAlignment="Top"
+                                 Classes="ReadOnlyMultiLineWrap"
+                                 Text="{Binding Source={x:Static updatum:EntryApplication.AssemblyDescription}}" />
+                    </TabItem>
+                    <TabItem Header="Assemblies">
+                        <TextBox VerticalContentAlignment="Top"
+                                 Classes="ReadOnlyMultiLine"
+                                 Text="{Binding Source={x:Static updatum:EntryApplication.FormattedLoadedAssemblies}}" />
+                    </TabItem>
+                    <TabItem Header="Terms of use">
+                        <TextBox VerticalContentAlignment="Top"
+                                 Classes="ReadOnlyMultiLineWrap"
+                                 Text="{Binding Source={x:Static app:App.TermsOfUseText}}" />
+                    </TabItem>
+                    <TabItem Header="{Binding Source={x:Static app:App.LicenseShort}, StringFormat='License ({0})'}">
+                        <TextBox VerticalContentAlignment="Top"
+                                 Classes="ReadOnlyMultiLineWrap"
+                                 Text="{Binding Source={x:Static app:App.LicenseText}}" />
+                    </TabItem>
+                </TabControl>
+            </Grid>
+        </DockPanel>
+    </suki:SukiMessageBoxHost>
+
+
+</controls:UserControlBase>

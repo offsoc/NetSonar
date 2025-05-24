@@ -1,0 +1,46 @@
+<controls:UserControlBase x:Class="NetSonar.Avalonia.Views.Dialogs.InstanceAlreadyRunningDialogView"
+                          xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:controls="clr-namespace:NetSonar.Avalonia.Controls"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:dialogs="clr-namespace:NetSonar.Avalonia.ViewModels.Dialogs"
+                          xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          Margin="20"
+                          d:DesignHeight="200"
+                          d:DesignWidth="800"
+                          x:DataType="dialogs:InstanceAlreadyRunningDialogModel"
+                          mc:Ignorable="d">
+    <Design.DataContext>
+        <dialogs:InstanceAlreadyRunningDialogModel />
+    </Design.DataContext>
+    <Grid ColumnDefinitions="Auto,*"
+          ColumnSpacing="15"
+          RowDefinitions="*,Auto"
+          RowSpacing="15">
+        <icon:MaterialIcon Grid.Row="0"
+                           Grid.Column="0"
+                           Width="64"
+                           Height="64"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Classes="Warning"
+                           Kind="Warning" />
+        <SelectableTextBlock Grid.Row="0"
+                             Grid.Column="1"
+                             VerticalAlignment="Center"
+                             Classes="h5"
+                             Text="{Binding Message}"
+                             TextWrapping="Wrap" />
+
+        <Button Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Classes="Flat Large"
+                Command="{Binding CloseWindowCommand}"
+                Content="{icon:MaterialIconTextExt Kind=Close,
+                                                   Text='Close'}"
+                IsCancel="True"
+                IsDefault="True" />
+    </Grid>
+</controls:UserControlBase>

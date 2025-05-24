@@ -1,0 +1,62 @@
+<controls:UserControlBase x:Class="NetSonar.Avalonia.Views.Dialogs.AppUpdateDialogView"
+                          xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:controls="clr-namespace:NetSonar.Avalonia.Controls"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:dialogs="clr-namespace:NetSonar.Avalonia.ViewModels.Dialogs"
+                          xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:md="clr-namespace:MarkdownViewer.Core.Controls;assembly=MarkdownViewer.Core"
+                          xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                          d:DesignHeight="450"
+                          d:DesignWidth="800"
+                          x:DataType="dialogs:AppUpdateDialogModel"
+                          mc:Ignorable="d">
+    <suki:SukiMessageBoxHost Classes="AppPanel"
+                             Header="{Binding AppUpdater.ReleasesAheadCount, StringFormat='Changelog with {0} releases:'}">
+        <md:MarkdownViewer MarkdownText="{Binding Changelog}" />
+        <suki:SukiMessageBoxHost.FooterLeftItemsSource>
+            <Border IsVisible="{Binding IsDownloading}">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel HorizontalAlignment="Center"
+                                Orientation="Horizontal"
+                                Spacing="5">
+                        <TextBlock Text="{Binding AppUpdater.DownloadedMegabytes}" />
+                        <TextBlock Text="/" />
+                        <TextBlock Text="{Binding AppUpdater.DownloadSizeMegabytes}" />
+                        <TextBlock Text="Megabytes" />
+                    </StackPanel>
+                    <ProgressBar ShowProgressText="True"
+                                 Value="{Binding AppUpdater.DownloadedPercentage}" />
+
+
+                </StackPanel>
+            </Border>
+        </suki:SukiMessageBoxHost.FooterLeftItemsSource>
+        <suki:SukiMessageBoxHost.ActionButtonsSource>
+            <Button Classes="Flat"
+                    Command="{Binding AutoUpdateCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Update,
+                                                       Text='Auto update'}"
+                    IsVisible="{Binding IsIdle}" />
+            <Button Classes="Flat"
+                    Command="{Binding ManualUpdateCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Download,
+                                                       Text='Manual update'}"
+                    IsVisible="{Binding IsIdle}" />
+
+            <Button Classes="Flat"
+                    Command="{Binding CloseDialogCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Close,
+                                                       Text='Close'}"
+                    IsCancel="True"
+                    IsVisible="{Binding IsIdle}" />
+            <Button Classes="Flat"
+                    Command="{Binding CancelUpdateCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Close,
+                                                       Text='Cancel'}"
+                    IsCancel="True"
+                    IsVisible="{Binding IsDownloading}" />
+        </suki:SukiMessageBoxHost.ActionButtonsSource>
+    </suki:SukiMessageBoxHost>
+</controls:UserControlBase>

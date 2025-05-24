@@ -1,0 +1,33 @@
+<UserControl x:Class="NetSonar.Avalonia.Views.TestUserControl"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:suki="https://github.com/kikipoulet/SukiUI"
+             xmlns:views="clr-namespace:NetSonar.Avalonia.Views"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="views:TestUserControl"
+             ItemCount="1"
+             mc:Ignorable="d">
+    <UserControl.Styles>
+        <Style Selector="DataGridCell.center">
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <suki:GlassCard IsVisible="{Binding !!ItemCount}">
+        <DataGrid Name="MyGrid"
+                  GridLinesVisibility="All"
+                  ItemsSource="{Binding TestCollection}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Index}"
+                                    CellStyleClasses="center"
+                                    Header="Index" />
+                <DataGridTextColumn Binding="{Binding Name}" Header="Name" />
+                <DataGridTextColumn Binding="{Binding Description}" Header="Description" />
+                <DataGridTextColumn Binding="{Binding Group}" Header="Group" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </suki:GlassCard>
+</UserControl>

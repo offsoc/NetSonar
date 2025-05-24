@@ -1,0 +1,187 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+        xmlns:suki="https://github.com/kikipoulet/SukiUI">
+    <Design.PreviewWith>
+        <Border Padding="20">
+            <!--  Add Controls for Previewer Here  -->
+        </Border>
+    </Design.PreviewWith>
+
+    <!--  Add Styles Here  -->
+    <Styles.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Light">
+                    <SolidColorBrush x:Key="AppInfoColor"
+                                     Color="RoyalBlue" />
+                    <SolidColorBrush x:Key="AppSuccessColor"
+                                     Color="DarkGreen" />
+                    <SolidColorBrush x:Key="AppWarningColor"
+                                     Color="DarkOrange" />
+                    <SolidColorBrush x:Key="AppErrorColor"
+                                     Color="DarkRed" />
+                </ResourceDictionary>
+                <ResourceDictionary x:Key="Dark">
+                    <SolidColorBrush x:Key="AppInfoColor"
+                                     Color="RoyalBlue" />
+                    <SolidColorBrush x:Key="AppSuccessColor"
+                                     Color="Green" />
+                    <SolidColorBrush x:Key="AppWarningColor"
+                                     Color="Orange" />
+                    <SolidColorBrush x:Key="AppErrorColor"
+                                     Color="Red" />
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+        </ResourceDictionary>
+        <SolidColorBrush x:Key="LogoColor"
+                         Color="#FF660066" />
+    </Styles.Resources>
+
+
+    <Style Selector="suki|SukiDialog">
+        <Setter Property="Margin" Value="50,30,50,50" />
+    </Style>
+
+    <Style Selector="TextBox.ReadOnly">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.ReadOnlyMultiLine">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.ReadOnlyMultiLineWrap">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.TransparentReadOnly">
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Auto" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.TransparentReadOnlyMultiLine">
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.TransparentReadOnlyMultiLineNoBorder">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="CaretBrush" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+    </Style>
+
+    <Style Selector="TextBox.TransparentReadOnlyMultiLineNoBorder:pointerover /template/ Border#border">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBox.TransparentReadOnlyMultiLineNoBorder:pointerover /template/ Border#PART_BorderElement">
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBox.TransparentReadOnlyMultiLineNoBorder:focus /template/ Border#border">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+    <Style Selector="TextBox.TransparentReadOnlyMultiLineNoBorder:focus /template/ Border#PART_BorderElement">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Background" Value="Transparent" />
+    </Style>
+
+    <Style Selector="DataGridCell.center">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+    </Style>
+
+    <!--  NumericUpDown  -->
+    <Style Selector="NumericUpDown">
+        <Setter Property="ClipValueToMinMax" Value="True" />
+    </Style>
+
+    <Style Selector="NumericUpDown.ipOctet">
+        <Setter Property="Minimum" Value="0" />
+        <Setter Property="Maximum" Value="255" />
+        <Setter Property="ShowButtonSpinner" Value="False" />
+        <Setter Property="Width" Value="65" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="FormatString" Value="F0" />
+    </Style>
+
+    <Style Selector="TextBox /template/ TextBlock#floatingWatermark">
+        <Setter Property="Foreground" Value="{DynamicResource SukiPrimaryColor}" />
+    </Style>
+
+    <Style Selector="NumericUpDown.ipOctet /template/ TextBox">
+        <Setter Property="MaxLength" Value="3" />
+    </Style>
+    <!--  NumericUpDown  -->
+
+    <!--  Button  -->
+    <Style Selector="Button.AppIcon">
+        <Setter Property="Padding" Value="10,8" />
+    </Style>
+
+    <!--  TextBlock  -->
+    <Style Selector="TextBlock.bold">
+        <Setter Property="FontWeight" Value="Bold" />
+    </Style>
+
+    <Style Selector="TextBlock.extraBold">
+        <Setter Property="FontWeight" Value="ExtraBold" />
+    </Style>
+
+    <Style Selector="icon|MaterialIcon.Success">
+        <Setter Property="Foreground" Value="{DynamicResource SukiSuccessColor}" />
+    </Style>
+    <Style Selector="icon|MaterialIcon.Information">
+        <Setter Property="Foreground" Value="{DynamicResource SukiInformationColor}" />
+    </Style>
+    <Style Selector="icon|MaterialIcon.Warning">
+        <Setter Property="Foreground" Value="{DynamicResource SukiWarningColor}" />
+    </Style>
+    <Style Selector="icon|MaterialIcon.Danger">
+        <Setter Property="Foreground" Value="{DynamicResource SukiDangerColor}" />
+    </Style>
+
+
+    <Style Selector="WrapPanel.PageContainer">
+        <Setter Property="Margin" Value="15" />
+        <Setter Property="Orientation" Value="Horizontal" />
+        <Setter Property="suki:WrapPanelExtensions.AnimatedScroll" Value="True" />
+        <Style Selector="^ &gt; suki|GlassCard">
+            <Setter Property="Margin" Value="15,15,15,15" />
+        </Style>
+    </Style>
+
+    <Style Selector="suki|InfoBar">
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="TitleOrientation" Value="Vertical" />
+        <Setter Property="IsClosable" Value="False" />
+        <Setter Property="IsTextSelectable" Value="True" />
+    </Style>
+
+    <Style Selector="suki|SukiMessageBoxHost.AppPanel">
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="UseAlternativeHeaderStyle" Value="True" />
+    </Style>
+</Styles>

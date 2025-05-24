@@ -1,0 +1,995 @@
+<controls:UserControlBase x:Class="NetSonar.Avalonia.Views.Dialogs.SetInterfaceIPDialogView"
+                          xmlns="https://github.com/avaloniaui"
+                          xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                          xmlns:controls="clr-namespace:NetSonar.Avalonia.Controls"
+                          xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                          xmlns:icon="clr-namespace:Material.Icons.Avalonia;assembly=Material.Icons.Avalonia"
+                          xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                          xmlns:suki="https://github.com/kikipoulet/SukiUI"
+                          xmlns:vm="clr-namespace:NetSonar.Avalonia.ViewModels.Dialogs"
+                          d:DesignHeight="650"
+                          d:DesignWidth="800"
+                          x:DataType="vm:SetInterfaceIPDialogModel"
+                          mc:Ignorable="d">
+    <Design.DataContext>
+        <vm:SetInterfaceIPDialogModel />
+    </Design.DataContext>
+
+    <suki:SukiMessageBoxHost Classes="AppPanel">
+        <suki:SukiMessageBoxHost.Header>
+            <suki:InfoBar Title="Please fix the following errors:"
+                          Grid.Row="0"
+                          Grid.Column="0"
+                          VerticalContentAlignment="Center"
+                          IsVisible="{Binding HasErrors}"
+                          Message="{Binding ValidationErrors}"
+                          Severity="Error" />
+        </suki:SukiMessageBoxHost.Header>
+
+        <TabControl Name="TabControlPanel">
+            <TabItem Header="IPv4"
+                     IsEnabled="{Binding NetworkInterface.SupportsIPv4}"
+                     IsVisible="{Binding NetworkInterface.SupportsIPv4}">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="0,20,0,0"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="10"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="10">
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Vertical"
+                                    Spacing="10">
+                            <RadioButton Content="Automatic IP assignment from DHCP"
+                                         IsChecked="{Binding IPv4DHCP}" />
+
+                            <RadioButton Content="Manual IP assignment"
+                                         IsChecked="{Binding !IPv4DHCP}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv4DHCP}"
+                                   Text="IP Address:" />
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !IPv4DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <NumericUpDown Classes="ipOctet"
+                                           Maximum="223"
+                                           Minimum="1"
+                                           Value="{Binding IPv4Octet1}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4Octet2}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4Octet3}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4Octet4}" />
+
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="16"
+                                       Text="/" />
+                            <NumericUpDown Width="75"
+                                           FormatString="F0"
+                                           Maximum="32"
+                                           Minimum="0"
+                                           Value="{Binding IPv4MaskCIDR}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv4DHCP}"
+                                   Text="Subnet Mask:" />
+
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !IPv4DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <NumericUpDown Classes="ipOctet"
+                                           Maximum="223"
+                                           Minimum="1"
+                                           Value="{Binding IPv4MaskOctet1}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4MaskOctet2}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4MaskOctet3}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4MaskOctet4}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="3"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv4DHCP}"
+                                   Text="Gateway:" />
+
+                        <StackPanel Grid.Row="3"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !IPv4DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <NumericUpDown Classes="ipOctet"
+                                           Maximum="223"
+                                           Minimum="1"
+                                           Value="{Binding IPv4GatewayOctet1}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4GatewayOctet2}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4GatewayOctet3}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding IPv4GatewayOctet4}" />
+
+                            <Button Command="{Binding ClearIPv4GatewayCommand}"
+                                    Content="{icon:MaterialIconExt Kind=Erase}"
+                                    ToolTip.Tip="Clear the gateway address" />
+                        </StackPanel>
+
+                        <Separator Grid.Row="4"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Margin="0,10" />
+
+                        <StackPanel Grid.Row="5"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Vertical"
+                                    Spacing="10">
+                            <RadioButton Content="Automatic DNS assignment from DHCP"
+                                         IsChecked="{Binding DNSv4DHCP}"
+                                         IsEnabled="{Binding IPv4DHCP}" />
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="10">
+                                <RadioButton Content="Manual DNS assignment"
+                                             IsChecked="{Binding !DNSv4DHCP}" />
+
+                                <DropDownButton Content="Presets"
+                                                IsEnabled="{Binding !DNSv4DHCP}">
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout ItemsSource="{Binding DNSv4Presets}"
+                                                    Placement="Right" />
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="6"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !DNSv4DHCP}"
+                                   Text="Primary DNS:" />
+
+                        <StackPanel Grid.Row="6"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !DNSv4DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <NumericUpDown Classes="ipOctet"
+                                           Maximum="223"
+                                           Minimum="1"
+                                           Value="{Binding DNSv4PrimaryOctet1}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4PrimaryOctet2}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4PrimaryOctet3}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4PrimaryOctet4}" />
+
+                            <SplitButton Command="{Binding SetDNSv4PrimaryFromGatewayCommand}"
+                                         Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                         ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Command="{Binding ClearDNSv4PrimaryAddressCommand}"
+                                                  Header="Clear address"
+                                                  Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="7"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv4DHCP}"
+                                   Text="Secondary DNS:" />
+
+                        <StackPanel Grid.Row="7"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !DNSv4DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <NumericUpDown Classes="ipOctet"
+                                           Maximum="223"
+                                           Minimum="1"
+                                           Value="{Binding DNSv4SecondaryOctet1}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4SecondaryOctet2}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4SecondaryOctet3}" />
+                            <TextBlock VerticalAlignment="Bottom"
+                                       FontSize="24"
+                                       FontWeight="Bold"
+                                       Text="." />
+                            <NumericUpDown Classes="ipOctet"
+                                           Value="{Binding DNSv4SecondaryOctet4}" />
+
+                            <SplitButton Command="{Binding SetDNSv4SecondaryFromGatewayCommand}"
+                                         Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                         ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Command="{Binding ClearDNSv4SecondaryAddressCommand}"
+                                                  Header="Clear address"
+                                                  Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+
+            </TabItem>
+            <TabItem Header="IPv6"
+                     IsEnabled="{Binding NetworkInterface.SupportsIPv6}"
+                     IsVisible="{Binding NetworkInterface.SupportsIPv6}">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                              VerticalScrollBarVisibility="Auto">
+                    <Grid Margin="0,20,0,0"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="10"
+                          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                          RowSpacing="10">
+
+                        <StackPanel Grid.Row="0"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Vertical"
+                                    Spacing="10">
+                            <RadioButton Content="Automatic IP assignment from DHCP"
+                                         IsChecked="{Binding IPv6DHCP}" />
+
+                            <RadioButton Content="Manual IP assignment"
+                                         IsChecked="{Binding !IPv6DHCP}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="1"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv6DHCP}"
+                                   Text="IP Address:" />
+
+                        <StackPanel Grid.Row="1"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !IPv6DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <TextBox Width="250"
+                                     Classes="clearButton"
+                                     Text="{Binding IPv6Address}" />
+
+                            <TextBlock VerticalAlignment="Center"
+                                       FontSize="16"
+                                       Text="/" />
+
+                            <NumericUpDown Width="80"
+                                           FormatString="F0"
+                                           Maximum="128"
+                                           Minimum="0"
+                                           Value="{Binding IPv6MaskCIDR}" />
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="2"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv6DHCP}"
+                                   Text="Gateway:" />
+
+                        <StackPanel Grid.Row="2"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !IPv6DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <TextBox Width="250"
+                                     Classes="clearButton"
+                                     Text="{Binding IPv6Gateway}" />
+                        </StackPanel>
+
+                        <Separator Grid.Row="4"
+                                   Grid.Column="0"
+                                   Grid.ColumnSpan="2"
+                                   Margin="0,10" />
+
+                        <StackPanel Grid.Row="5"
+                                    Grid.Column="0"
+                                    Grid.ColumnSpan="2"
+                                    Orientation="Vertical"
+                                    Spacing="10">
+                            <RadioButton Content="Automatic DNS assignment from DHCP"
+                                         IsChecked="{Binding DNSv6DHCP}"
+                                         IsEnabled="{Binding IPv6DHCP}" />
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="10">
+                                <RadioButton Content="Manual DNS assignment"
+                                             IsChecked="{Binding !DNSv6DHCP}" />
+
+                                <DropDownButton Content="Presets"
+                                                IsEnabled="{Binding !DNSv6DHCP}">
+                                    <DropDownButton.Flyout>
+                                        <MenuFlyout ItemsSource="{Binding DNSv6Presets}"
+                                                    Placement="Right" />
+                                    </DropDownButton.Flyout>
+                                </DropDownButton>
+                            </StackPanel>
+
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="6"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !DNSv6DHCP}"
+                                   Text="Primary DNS:" />
+
+                        <StackPanel Grid.Row="6"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !DNSv6DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <TextBox Width="250"
+                                     Classes="clearButton"
+                                     Text="{Binding DNSv6PrimaryAddress}" />
+
+                            <SplitButton Command="{Binding SetDNSv6PrimaryFromGatewayCommand}"
+                                         Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                         ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Command="{Binding ClearDNSv6PrimaryAddressCommand}"
+                                                  Header="Clear address"
+                                                  Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                        </StackPanel>
+
+                        <TextBlock Grid.Row="7"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"
+                                   IsEnabled="{Binding !IPv6DHCP}"
+                                   Text="Secondary DNS:" />
+
+                        <StackPanel Grid.Row="7"
+                                    Grid.Column="1"
+                                    IsEnabled="{Binding !DNSv6DHCP}"
+                                    Orientation="Horizontal"
+                                    Spacing="5">
+                            <TextBox Width="250"
+                                     Classes="clearButton"
+                                     Text="{Binding DNSv6SecondaryAddress}" />
+
+                            <SplitButton Command="{Binding SetDNSv6SecondaryFromGatewayCommand}"
+                                         Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                         ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                <SplitButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Command="{Binding ClearDNSv6SecondaryAddressCommand}"
+                                                  Header="Clear address"
+                                                  Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                    </MenuFlyout>
+                                </SplitButton.Flyout>
+                            </SplitButton>
+                        </StackPanel>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+
+        <suki:SukiMessageBoxHost.FooterLeftItemsSource>
+            <StackPanel Orientation="Vertical"
+                        Spacing="5">
+                <StackPanel Orientation="Horizontal"
+                            Spacing="5">
+                    <icon:MaterialIcon FontWeight="Bold"
+                                       Kind="{Binding NetworkInterface.TypeIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.NetworkInterfaceType}" />
+
+                    <SelectableTextBlock FontWeight="Bold"
+                                         Text="{Binding NetworkInterface.Interface.Name}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            Spacing="5">
+                    <icon:MaterialIcon Classes="Success"
+                                       FontWeight="Bold"
+                                       IsVisible="{Binding NetworkInterface.IsActive}"
+                                       Kind="{Binding NetworkInterface.StatusIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.OperationalStatus}" />
+                    <icon:MaterialIcon Classes="Danger"
+                                       FontWeight="Bold"
+                                       IsVisible="{Binding !NetworkInterface.IsActive}"
+                                       Kind="{Binding NetworkInterface.StatusIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.OperationalStatus}" />
+                    <SelectableTextBlock FontWeight="Bold"
+                                         Text="{Binding NetworkInterface.Interface.Description}" />
+                </StackPanel>
+            </StackPanel>
+        </suki:SukiMessageBoxHost.FooterLeftItemsSource>
+        <suki:SukiMessageBoxHost.ActionButtonsSource>
+            <Button Classes="Flat"
+                    Command="{Binding ApplyCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Check,
+                                                       Text='Apply'}" />
+            <Button Classes="Flat"
+                    Command="{Binding CloseDialogCommand}"
+                    Content="{icon:MaterialIconTextExt Kind=Cancel,
+                                                       Text='Cancel'}" />
+        </suki:SukiMessageBoxHost.ActionButtonsSource>
+    </suki:SukiMessageBoxHost>
+
+    <!--
+    <Grid ColumnDefinitions="*"
+          RowDefinitions="Auto,*,Auto"
+          RowSpacing="20">
+
+        <suki:InfoBar Title="Please fix the following errors:"
+                      Grid.Row="0"
+                      Grid.Column="0"
+                      VerticalContentAlignment="Center"
+                      IsVisible="{Binding HasErrors}"
+                      Message="{Binding ValidationErrors}"
+                      Severity="Error" />
+
+        <suki:GlassCard Grid.Row="1"
+                        Grid.Column="0">
+            <TabControl Name="TabControlPanel">
+                <TabItem Header="IPv4"
+                         IsEnabled="{Binding NetworkInterface.SupportsIPv4}"
+                         IsVisible="{Binding NetworkInterface.SupportsIPv4}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
+                        <Grid Margin="0,20,0,0"
+                              ColumnDefinitions="Auto,*"
+                              ColumnSpacing="10"
+                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                              RowSpacing="10">
+
+                            <StackPanel Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Vertical"
+                                        Spacing="10">
+                                <RadioButton Content="Automatic IP assignment from DHCP"
+                                             IsChecked="{Binding IPv4DHCP}" />
+
+                                <RadioButton Content="Manual IP assignment"
+                                             IsChecked="{Binding !IPv4DHCP}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv4DHCP}"
+                                       Text="IP Address:" />
+
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !IPv4DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <NumericUpDown Classes="ipOctet"
+                                               Maximum="223"
+                                               Minimum="1"
+                                               Value="{Binding IPv4Octet1}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4Octet2}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4Octet3}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4Octet4}" />
+
+                                <TextBlock VerticalAlignment="Center"
+                                           FontSize="16"
+                                           Text="/" />
+                                <NumericUpDown Width="75"
+                                               FormatString="F0"
+                                               Maximum="32"
+                                               Minimum="0"
+                                               Value="{Binding IPv4MaskCIDR}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv4DHCP}"
+                                       Text="Subnet Mask:" />
+
+                            <StackPanel Grid.Row="2"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !IPv4DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <NumericUpDown Classes="ipOctet"
+                                               Maximum="223"
+                                               Minimum="1"
+                                               Value="{Binding IPv4MaskOctet1}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4MaskOctet2}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4MaskOctet3}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4MaskOctet4}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="3"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv4DHCP}"
+                                       Text="Gateway:" />
+
+                            <StackPanel Grid.Row="3"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !IPv4DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <NumericUpDown Classes="ipOctet"
+                                               Maximum="223"
+                                               Minimum="1"
+                                               Value="{Binding IPv4GatewayOctet1}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4GatewayOctet2}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4GatewayOctet3}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding IPv4GatewayOctet4}" />
+
+                                <Button Command="{Binding ClearIPv4GatewayCommand}"
+                                        Content="{icon:MaterialIconExt Kind=Erase}"
+                                        ToolTip.Tip="Clear the gateway address" />
+                            </StackPanel>
+
+                            <Separator Grid.Row="4"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Margin="0,10" />
+
+                            <StackPanel Grid.Row="5"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Vertical"
+                                        Spacing="10">
+                                <RadioButton Content="Automatic DNS assignment from DHCP"
+                                             IsChecked="{Binding DNSv4DHCP}"
+                                             IsEnabled="{Binding IPv4DHCP}" />
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <RadioButton Content="Manual DNS assignment"
+                                                 IsChecked="{Binding !DNSv4DHCP}" />
+
+                                    <DropDownButton Content="Presets"
+                                                    IsEnabled="{Binding !DNSv4DHCP}">
+                                        <DropDownButton.Flyout>
+                                            <MenuFlyout ItemsSource="{Binding DNSv4Presets}"
+                                                        Placement="Right" />
+                                        </DropDownButton.Flyout>
+                                    </DropDownButton>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="6"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !DNSv4DHCP}"
+                                       Text="Primary DNS:" />
+
+                            <StackPanel Grid.Row="6"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !DNSv4DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <NumericUpDown Classes="ipOctet"
+                                               Maximum="223"
+                                               Minimum="1"
+                                               Value="{Binding DNSv4PrimaryOctet1}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4PrimaryOctet2}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4PrimaryOctet3}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4PrimaryOctet4}" />
+
+                                <SplitButton Command="{Binding SetDNSv4PrimaryFromGatewayCommand}"
+                                             Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                             ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Command="{Binding ClearDNSv4PrimaryAddressCommand}"
+                                                      Header="Clear address"
+                                                      Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="7"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv4DHCP}"
+                                       Text="Secondary DNS:" />
+
+                            <StackPanel Grid.Row="7"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !DNSv4DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <NumericUpDown Classes="ipOctet"
+                                               Maximum="223"
+                                               Minimum="1"
+                                               Value="{Binding DNSv4SecondaryOctet1}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4SecondaryOctet2}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4SecondaryOctet3}" />
+                                <TextBlock VerticalAlignment="Bottom"
+                                           FontSize="24"
+                                           FontWeight="Bold"
+                                           Text="." />
+                                <NumericUpDown Classes="ipOctet"
+                                               Value="{Binding DNSv4SecondaryOctet4}" />
+
+                                <SplitButton Command="{Binding SetDNSv4SecondaryFromGatewayCommand}"
+                                             Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                             ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Command="{Binding ClearDNSv4SecondaryAddressCommand}"
+                                                      Header="Clear address"
+                                                      Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+
+                </TabItem>
+                <TabItem Header="IPv6"
+                         IsEnabled="{Binding NetworkInterface.SupportsIPv6}"
+                         IsVisible="{Binding NetworkInterface.SupportsIPv6}">
+                    <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                  VerticalScrollBarVisibility="Auto">
+                        <Grid Margin="0,20,0,0"
+                              ColumnDefinitions="Auto,*"
+                              ColumnSpacing="10"
+                              RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto"
+                              RowSpacing="10">
+
+                            <StackPanel Grid.Row="0"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Vertical"
+                                        Spacing="10">
+                                <RadioButton Content="Automatic IP assignment from DHCP"
+                                             IsChecked="{Binding IPv6DHCP}" />
+
+                                <RadioButton Content="Manual IP assignment"
+                                             IsChecked="{Binding !IPv6DHCP}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="1"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv6DHCP}"
+                                       Text="IP Address:" />
+
+                            <StackPanel Grid.Row="1"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !IPv6DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <TextBox Width="250"
+                                         Classes="clearButton"
+                                         Text="{Binding IPv6Address}" />
+
+                                <TextBlock VerticalAlignment="Center"
+                                           FontSize="16"
+                                           Text="/" />
+
+                                <NumericUpDown Width="80"
+                                               FormatString="F0"
+                                               Maximum="128"
+                                               Minimum="0"
+                                               Value="{Binding IPv6MaskCIDR}" />
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="2"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv6DHCP}"
+                                       Text="Gateway:" />
+
+                            <StackPanel Grid.Row="2"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !IPv6DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <TextBox Width="250"
+                                         Classes="clearButton"
+                                         Text="{Binding IPv6Gateway}" />
+                            </StackPanel>
+
+                            <Separator Grid.Row="4"
+                                       Grid.Column="0"
+                                       Grid.ColumnSpan="2"
+                                       Margin="0,10" />
+
+                            <StackPanel Grid.Row="5"
+                                        Grid.Column="0"
+                                        Grid.ColumnSpan="2"
+                                        Orientation="Vertical"
+                                        Spacing="10">
+                                <RadioButton Content="Automatic DNS assignment from DHCP"
+                                             IsChecked="{Binding DNSv6DHCP}"
+                                             IsEnabled="{Binding IPv6DHCP}" />
+                                <StackPanel Orientation="Horizontal"
+                                            Spacing="10">
+                                    <RadioButton Content="Manual DNS assignment"
+                                                 IsChecked="{Binding !DNSv6DHCP}" />
+
+                                    <DropDownButton Content="Presets"
+                                                    IsEnabled="{Binding !DNSv6DHCP}">
+                                        <DropDownButton.Flyout>
+                                            <MenuFlyout ItemsSource="{Binding DNSv6Presets}"
+                                                        Placement="Right" />
+                                        </DropDownButton.Flyout>
+                                    </DropDownButton>
+                                </StackPanel>
+
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="6"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !DNSv6DHCP}"
+                                       Text="Primary DNS:" />
+
+                            <StackPanel Grid.Row="6"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !DNSv6DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <TextBox Width="250"
+                                         Classes="clearButton"
+                                         Text="{Binding DNSv6PrimaryAddress}" />
+
+                                <SplitButton Command="{Binding SetDNSv6PrimaryFromGatewayCommand}"
+                                             Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                             ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Command="{Binding ClearDNSv6PrimaryAddressCommand}"
+                                                      Header="Clear address"
+                                                      Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+                            </StackPanel>
+
+                            <TextBlock Grid.Row="7"
+                                       Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       IsEnabled="{Binding !IPv6DHCP}"
+                                       Text="Secondary DNS:" />
+
+                            <StackPanel Grid.Row="7"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding !DNSv6DHCP}"
+                                        Orientation="Horizontal"
+                                        Spacing="5">
+                                <TextBox Width="250"
+                                         Classes="clearButton"
+                                         Text="{Binding DNSv6SecondaryAddress}" />
+
+                                <SplitButton Command="{Binding SetDNSv6SecondaryFromGatewayCommand}"
+                                             Content="{icon:MaterialIconExt Kind=ServerNetwork}"
+                                             ToolTip.Tip="Set the DNS from the defined server gateway.">
+                                    <SplitButton.Flyout>
+                                        <MenuFlyout>
+                                            <MenuItem Command="{Binding ClearDNSv6SecondaryAddressCommand}"
+                                                      Header="Clear address"
+                                                      Icon="{icon:MaterialIconExt Kind=Clear}" />
+                                        </MenuFlyout>
+                                    </SplitButton.Flyout>
+                                </SplitButton>
+                            </StackPanel>
+                        </Grid>
+                    </ScrollViewer>
+                </TabItem>
+            </TabControl>
+        </suki:GlassCard>
+
+        <Grid Grid.Row="2"
+              ColumnDefinitions="*,Auto"
+              ColumnSpacing="20"
+              RowDefinitions="Auto">
+            <StackPanel Grid.Row="0"
+                        Grid.Column="0"
+                        VerticalAlignment="Bottom"
+                        Spacing="5">
+
+                <StackPanel Orientation="Horizontal"
+                            Spacing="5">
+                    <icon:MaterialIcon FontWeight="Bold"
+                                       Kind="{Binding NetworkInterface.TypeIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.NetworkInterfaceType}" />
+
+                    <SelectableTextBlock FontWeight="Bold"
+                                         Text="{Binding NetworkInterface.Interface.Name}" />
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal"
+                            Spacing="5">
+                    <icon:MaterialIcon Classes="Success"
+                                       FontWeight="Bold"
+                                       IsVisible="{Binding NetworkInterface.IsActive}"
+                                       Kind="{Binding NetworkInterface.StatusIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.OperationalStatus}" />
+                    <icon:MaterialIcon Classes="Danger"
+                                       FontWeight="Bold"
+                                       IsVisible="{Binding !NetworkInterface.IsActive}"
+                                       Kind="{Binding NetworkInterface.StatusIcon}"
+                                       ToolTip.Tip="{Binding NetworkInterface.Interface.OperationalStatus}" />
+                    <SelectableTextBlock FontWeight="Bold"
+                                         Text="{Binding NetworkInterface.Interface.Description}" />
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Grid.Row="0"
+                        Grid.Column="1"
+                        HorizontalAlignment="Right"
+                        Orientation="Horizontal"
+                        Spacing="10">
+                <Button Classes="Flat"
+                        Command="{Binding ApplyCommand}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5">
+                        <icon:MaterialIcon Kind="Check" />
+                        <TextBlock Text="Apply" />
+                    </StackPanel>
+                </Button>
+                <Button Classes="Flat"
+                        Command="{Binding CloseDialogCommand}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="5">
+                        <icon:MaterialIcon Kind="Cancel" />
+                        <TextBlock Text="Cancel" />
+                    </StackPanel>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+
+
+    </Grid>-->
+
+</controls:UserControlBase>
