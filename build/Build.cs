@@ -391,7 +391,7 @@ public class Build : NukeBuild
                             publishPath.Copy(appImageBinDirPath);
 
                             // Create AppImage
-                            ProcessTasks.StartShell($"ARCH={archAlt} \"{appImageAppRunBinary}\" \"{appImageDirPath}\" \"{appImagePublishPath}\"").AssertWaitForExit();
+                            ProcessTasks.StartShell($"ARCH=x86_64 \"{appImageAppRunBinary}\" \"{appImageDirPath}\" \"{appImagePublishPath}\"").AssertWaitForExit();
                             appImagePublishPath.SetExecutable();
 
                             appImageDirPath.DeleteDirectory();
