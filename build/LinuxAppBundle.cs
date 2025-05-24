@@ -98,12 +98,12 @@ public static class LinuxAppBundle
 
     public static string GetAppImageAppDataXmlFile(Build build)
     {
-        var summary = Regex.Replace(build.SoftwareDescription, @"\r\n?|\n", " ", RegexOptions.Multiline)
+        var summary = Regex.Replace(build.SoftwareShortDescription, @"\r\n?|\n", " ", RegexOptions.Multiline)
             .Replace('.', ';');
 
         if (summary.Length > 200)
         {
-            summary = $"{summary[..197]}...";
+            summary = summary[..200];
         }
 
         return $"""
