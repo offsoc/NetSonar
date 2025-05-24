@@ -7,7 +7,6 @@ using NetSonar.Avalonia.ViewModels;
 using NetSonar.Avalonia.Views;
 using System.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using NetSonar.Avalonia.Services;
 using SukiUI.Dialogs;
 using SukiUI.Toasts;
 using NetSonar.Avalonia.Common;

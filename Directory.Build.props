@@ -24,7 +24,7 @@ Designed for administrators and developers needing lightweight, cross-platform n
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
         <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
 
-        <Version>0.0.1-dev</Version>
+        <Version>0.1.0</Version>
         <PackageTags>Network;Diagnostics;Monitoring;ICMP;TCP;UDP;HTTP;Ping;Port-Scanning;Service-Discovery;Subnet-Scanner;Network-Management;Network-Interfaces;Cross-Platform;Admin;DevOps;IT;Tools</PackageTags>
 
         <!-- Set the path map and artifacts path. -->

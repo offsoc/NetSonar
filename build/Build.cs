@@ -329,11 +329,7 @@ public class Build : NukeBuild
                                 appImageToolPath.SetExecutable();
                             }
 
-                            if (File.Exists("/dev/fuse"))
-                            {
-                                appImageAppRunBinary = appImageToolPath;
-                            }
-                            else if (!appImageToolExtractedPath.DirectoryExists())
+                            if (!appImageToolExtractedPath.DirectoryExists())
                             {
                                 // Extract AppImage so it can be run in Docker containers and on machines that don't have FUSE installed
                                 // Note: Extracting requires libglib2.0-0 to be installed

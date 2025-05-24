@@ -1,7 +1,7 @@
 ﻿<Project Sdk="WixToolset.Sdk/6.0.0">
   <PropertyGroup>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
-    <OutputName>$(ProductName)_win-$(Platform)_v$(AssemblyVersion)</OutputName>
+    <OutputName>$(ProductName)_win-$(Platform)_v$(Version)</OutputName>
     <OutputPath>$(ArtifactsPath)\bin\$(ProductName).MsiInstaller\$(Configuration)_$(Platform)</OutputPath>
     <SignOutput>true</SignOutput>
     <HarvestPath Condition="'$(HarvestPath)' == ''">$(CommonPublishDir)\$(OutputName)</HarvestPath>
@@ -10,7 +10,7 @@
             Company=$(Company);
             Authors=$(Authors);
             ProductName=$(ProductName);
-            ProductVersion=$(AssemblyVersion);
+            ProductVersion=$(Version);
             ProductDescription=$(Description);
             RepositoryUrl=$(RepositoryUrl);
             HarvestPath=$(HarvestPath)

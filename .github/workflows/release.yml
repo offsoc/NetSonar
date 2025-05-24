@@ -6,7 +6,7 @@ on:
       dry_run:
         description: 'Run without creating tag/release (Dry run)'
         required: false
-        default: false
+        default: true
         type: boolean
 
 jobs:
@@ -80,6 +80,12 @@ jobs:
 
       - run: dotnet tool install Nuke.GlobalTool --global
       - run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+      - name: Install libfuse2 (Linux only)
+        if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-latest-arm64'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfuse2
 
       - run: nuke publish --rids ${{ matrix.rid }} --publish-discard-non-bundles
 
