@@ -13,8 +13,8 @@
         <CompanyRDNS>pt.ptrtech</CompanyRDNS>
         <Authors>Tiago Conceição</Authors>
         <Copyright>Copyright 2025-$([System.DateTime]::Now.ToString(`yyyy`)) © $(Company)</Copyright>
-        <ShortDescription>NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), managing network interfaces, and discovering local devices/services</ShortDescription>
-        <Description>$(ShortDescription).
+        <Summary>Lightweight cross-platform network diagnostics tool for pinging, scanning, and analyzing hosts and services</Summary>
+        <Description>NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), managing network interfaces, and discovering local devices/services.
 Features multi-protocol latency checks, subnet scanning, port/service detection, and real-time interface configuration.
 Designed for administrators and developers needing lightweight, cross-platform network analysis.</Description>
 
