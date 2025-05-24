@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Nuke.Common;
 using Nuke.Common.IO;
@@ -194,10 +195,19 @@ public class Build : NukeBuild
 
                     var arch = "x64";
                     var archAlt = "x86_64";
+                    var executableArch = arch;
+                    var executableArchAlt = archAlt;
+
                     if (rid.EndsWith("-arm64"))
                     {
                         arch = "arm64";
                         archAlt = "aarch64";
+                    }
+
+                    if (RuntimeInformation.OSArchitecture is Architecture.Arm or Architecture.Arm64 or Architecture.Armv6)
+                    {
+                        executableArch = "arm64";
+                        executableArchAlt = "aarch64";
                     }
 
                     var runtimeCacheFile = publishPath / BuildRuntimeCacheFileName;
@@ -305,7 +315,7 @@ public class Build : NukeBuild
                             var appImagePublishPath = publishPath + ".AppImage";
                             appImagePublishPath.DeleteFile();
 
-                            var appImageToolExtractedFolderName = $"appimagetool-{archAlt}";
+                            var appImageToolExtractedFolderName = $"appimagetool-{executableArchAlt}";
                             var appImageToolFileName = appImageToolExtractedFolderName + ".AppImage";
 
 
@@ -391,7 +401,7 @@ public class Build : NukeBuild
                             publishPath.Copy(appImageBinDirPath);
 
                             // Create AppImage
-                            ProcessTasks.StartShell($"ARCH=x86_64 \"{appImageAppRunBinary}\" \"{appImageDirPath}\" \"{appImagePublishPath}\"").AssertWaitForExit();
+                            ProcessTasks.StartShell($"ARCH={archAlt} \"{appImageAppRunBinary}\" \"{appImageDirPath}\" \"{appImagePublishPath}\"").AssertWaitForExit();
                             appImagePublishPath.SetExecutable();
 
                             appImageDirPath.DeleteDirectory();
