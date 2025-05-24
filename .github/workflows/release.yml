@@ -3,50 +3,57 @@ name: 🚀 Publish Release
 on:
   workflow_dispatch:
     inputs:
-      tag_version:
-        description: 'Semantic version (e.g., 1.0.0 or v1.0.0)'
-        required: true
-        type: string
       dry_run:
-        description: 'Run without creating tag/release'
+        description: 'Run without creating tag/release (Dry run)'
         required: false
         default: false
         type: boolean
 
 jobs:
-  validate_tag:
-    name: '🔍 Validate Tag'
+  get_version:
+    name: '🔍 Get Version'
     runs-on: ubuntu-latest
     outputs:
-      normalized_tag: ${{ steps.validate.outputs.normalized_tag }}
+      base_version: ${{ steps.version.outputs.base_version }}
+      release_version: ${{ steps.version.outputs.release_version }}
     steps:
       - uses: actions/checkout@v4
-      - run: |
-          clean_version="${INPUT_VERSION#v}"
-          if [[ ! "$clean_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$ ]]; then
-            echo "::error::Invalid semantic version"
+
+      - name: Extract version from Directory.Build.props
+        id: version
+        run: |
+          # Extract version from XML file
+          VERSION=$(grep -oP '<Version>\K[^<]+' Directory.Build.props)
+
+          # Remove -dev suffix if present
+          BASE_VERSION="${VERSION%-dev}"
+
+          # Ensure version is valid
+          if [[ ! "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$ ]]; then
+            echo "::error::Invalid version format in Directory.Build.props: $VERSION"
             exit 1
           fi
-          echo "normalized_tag=v${clean_version}" >> $GITHUB_OUTPUT
-        env:
-          INPUT_VERSION: ${{ github.event.inputs.tag_version }}
+
+          echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
+          echo "release_version=v$BASE_VERSION" >> $GITHUB_OUTPUT
+          echo "Found version: $VERSION, releasing: v$BASE_VERSION"
 
   create_tag:
     name: '🏷️ Create Tag'
-    needs: validate_tag
+    needs: get_version
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
-          git tag ${{ needs.validate_tag.outputs.normalized_tag }}
-          git push origin ${{ needs.validate_tag.outputs.normalized_tag }}
+          git tag ${{ needs.get_version.outputs.release_version }}
+          git push origin ${{ needs.get_version.outputs.release_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   build:
     name: '🛠️ Build (${{ matrix.rid }})'
-    needs: validate_tag
+    needs: get_version
     strategy:
       matrix:
         include:
@@ -104,13 +111,15 @@ jobs:
       - name: Extract changelog
         id: changelog
         run: |
-          # Find the version section in CHANGELOG.md
-          VERSION="${{ needs.validate_tag.outputs.normalized_tag }}"
+          VERSION="${{ needs.get_version.outputs.base_version }}"
+          # Match both formats: "# 1.1.0" and "# v1.1.0"
           CHANGELOG_CONTENT=$(awk -v version="$VERSION" '
             BEGIN { print=0 }
-            /^## \[/ {
-              if ($0 ~ "\\[" version "\\]") { print=1; next }
-              else if (print) { exit }
+            /^# (v)?'"${VERSION}"' / {
+              print=1; next
+            }
+            /^# (v)?[0-9]+\.[0-9]+\.[0-9]+ / {
+              if (print) exit
             }
             print { print }
           ' repo/CHANGELOG.md)
@@ -124,8 +133,8 @@ jobs:
 
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.validate_tag.outputs.normalized_tag }}
-          name: Release ${{ needs.validate_tag.outputs.normalized_tag }}
+          tag_name: ${{ needs.get_version.outputs.release_version }}
+          name: Release ${{ needs.get_version.outputs.release_version }}
           body: ${{ steps.changelog.outputs.changelog }}
           files: release-artifacts/**/*
         env:

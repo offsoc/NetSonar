@@ -44,7 +44,7 @@ public class Build : NukeBuild
     public string SoftwareDescription => field ??= Solution.NetSonar_Desktop.GetProperty("Description")!;
 
     [field: AllowNull, MaybeNull]
-    public string SoftwareVersion => field ??= Solution.NetSonar_Desktop.GetProperty("AssemblyVersion")!;
+    public string SoftwareVersion => field ??= Solution.NetSonar_Desktop.GetProperty("Version")!;
 
     [field: AllowNull, MaybeNull]
     public string SoftwareCopyright => field ??= Solution.NetSonar_Desktop.GetProperty("Copyright")!;
