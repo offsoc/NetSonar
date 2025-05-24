@@ -103,8 +103,9 @@ public static class LinuxAppBundle
 
         if (summary.Length > 200)
         {
-            summary = summary[..200];
+            summary = $"{summary[..197]}...";
         }
+
         return $"""
            <?xml version="1.0" encoding="UTF-8"?>
            <component type="desktop-application">
