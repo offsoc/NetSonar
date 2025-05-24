@@ -101,9 +101,9 @@ public static class LinuxAppBundle
         var summary = Regex.Replace(build.SoftwareSummary, @"\r\n?|\n", " ", RegexOptions.Multiline)
             .Replace('.', ';');
 
-        if (summary.Length > 200)
+        if (summary.Length > 78)
         {
-            summary = summary[..200];
+            summary = summary[..78];
         }
 
         return $"""
