@@ -295,7 +295,7 @@ public class Build : NukeBuild
                             if (IsOsx)
                             {
                                 Log.Information("Codesign {name}", macOSAppPath.Name);
-                                ProcessTasks.StartProcess("codesign", $"--force --sign - \"{macOSAppPath}\"");
+                                ProcessTasks.StartProcess("codesign", $"--force --deep --sign - \"{macOSAppPath}\"").AssertWaitForExit();
                             }
 
 
@@ -456,7 +456,7 @@ public class Build : NukeBuild
                             if (IsOsx)
                             {
                                 Log.Information("Codesign {name}", macOSAppPath.Name);
-                                ProcessTasks.StartProcess("codesign", $"--force --sign - \"{macOSAppPath}\"");
+                                ProcessTasks.StartProcess("codesign", $"--force --deep --sign - \"{macOSAppPath}\"").AssertWaitForExit();
                             }
 
                             var zipPath = PublishDirectory / $"{SoftwareName}_osx-multiarch_v{SoftwareVersion}.zip";
