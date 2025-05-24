@@ -339,9 +339,16 @@ public class Build : NukeBuild
 
                                 // Extract AppImage so it can be run in Docker containers and on machines that don't have FUSE installed
                                 // Note: Extracting requires libglib2.0-0 to be installed
-                                ProcessTasks.StartShell($"./{appImageToolFileName} --appimage-extract", tempBuildPath);
+                                ProcessTasks.StartShell($"cd {tempBuildPath} && ./{appImageToolFileName} --appimage-extract", tempBuildPath);
+                                ProcessTasks.StartShell($"ls -la {tempBuildPath}");
                                 var tempExtractedFolder = tempBuildPath / "squashfs-root";
                                 Log.Information("{TempExtractedFolder}: {DirectoryExists}", tempExtractedFolder, tempExtractedFolder.DirectoryExists());
+                                if (!tempExtractedFolder.DirectoryExists())
+                                {
+                                    Log.Error("Failed to extract {AppImageToolFileName} to {TempBuildPath}", appImageToolFileName, tempBuildPath);
+                                    continue;
+                                }
+
                                 tempExtractedFolder.Rename(appImageToolExtractedFolderName);
                             }
 
