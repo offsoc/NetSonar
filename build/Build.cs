@@ -331,6 +331,12 @@ public class Build : NukeBuild
 
                             if (!appImageToolExtractedPath.DirectoryExists())
                             {
+                                bool fuseAvailable = LinuxAppBundle.IsFuseAvailable();
+                                if (!fuseAvailable)
+                                {
+                                    Log.Warning("FUSE not detected (libfuse.so.2 missing). AppImage extraction may fail.");
+                                }
+
                                 // Extract AppImage so it can be run in Docker containers and on machines that don't have FUSE installed
                                 // Note: Extracting requires libglib2.0-0 to be installed
                                 ProcessTasks.StartShell($"./{appImageToolFileName} --appimage-extract", tempBuildPath);

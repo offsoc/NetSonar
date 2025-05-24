@@ -1,4 +1,5 @@
 ﻿using System.Text.RegularExpressions;
+using Nuke.Common.Tooling;
 
 namespace build;
 
@@ -139,5 +140,12 @@ public static class LinuxAppBundle
 
                </component>
                """;
+    }
+
+    public static bool IsFuseAvailable()
+    {
+        using var result = ProcessTasks.StartShell("ldconfig -p | grep libfuse.so.2", timeout:3000);
+        result.WaitForExit();
+        return result.ExitCode == 0;
     }
 }

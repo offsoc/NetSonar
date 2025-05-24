@@ -85,7 +85,7 @@ jobs:
         if: matrix.os == 'ubuntu-latest' || matrix.os == 'ubuntu-latest-arm64'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libfuse2
+          sudo apt-get install -y libfuse2 libglib2.0-0
 
       - run: nuke publish --rids ${{ matrix.rid }} --publish-discard-non-bundles
 
