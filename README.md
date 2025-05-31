@@ -16,7 +16,7 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
 - **Network Pings**: Perform ICMP/TCP/UDP/HTTP pings to check the availability and latency of network devices.
 - **Interface Management**: View and manage network interfaces, including IP configuration and statistics.
-- **Cross-Platform**: Runs on Windows, macOS, and Linux.
+- **Cross-Platform**: Built with [C# dotnet](https://dotnet.microsoft.com/en-us/), runs on Windows, macOS, and Linux. 
 - **Modern UI**: Built with [Avalonia](https://avaloniaui.net) and [SukiUI](https://github.com/kikipoulet/SukiUI), featuring Fluent themes.
 - **Charts and Visualizations**: Uses LiveCharts for real-time data visualization.
 - **Customizable**: Supports themes and UI customization.
