@@ -650,9 +650,9 @@ public partial class PingableServicesPageModel : PageViewModelBase
 
         GenericWindow window = new()
         {
-            Title = $"{App.Software} Chart",
+            Title = $"{App.SoftwareWithVersion}  Chart",
             CanPin = true,
-            Content = new ContentPresenter()
+            Content = new ContentPresenter
             {
                 Margin = new Thickness(20),
                 Content = new PingableServiceGraphFragmentModel(_servicesDataGrid.SelectedItems.AsValueEnumerable<PingableService>().ToArray())
