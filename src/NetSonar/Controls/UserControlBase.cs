@@ -39,7 +39,7 @@ public partial class UserControlBase : UserControl
     }
 
     [RelayCommand]
-    public Task CopyToClipboard(object? obj)
+    public static Task CopyToClipboard(object? obj)
     {
         return obj is null
             ? Task.CompletedTask

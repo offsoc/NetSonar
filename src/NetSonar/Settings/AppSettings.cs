@@ -82,16 +82,17 @@ public partial class PingServicesSettings : BaseSettings
 
 
     [ObservableProperty]
-    public partial ObservableList<PingableService> Services { get; set; } = [
-new (ServiceProtocolType.ICMP, "192.168.1.254", "Router ASUS", "Network"),
+    public partial ObservableList<PingableService> Services { get; set; }
+#if DEBUG
+        = [
+new (ServiceProtocolType.ICMP, "192.168.1.254", "Router", "Network"),
 new (ServiceProtocolType.ICMP, "1.1.1.1", "Cloudflare", "DNS"),
 new (ServiceProtocolType.TCP, "1.1.1.1:53", "Cloudflare", "DNS"),
 new (ServiceProtocolType.ICMP, "google.pt", "Google", "DNS"),
 new (ServiceProtocolType.ICMP, "8.8.8.8", "Google", "DNS"),
 new (ServiceProtocolType.TCP, "8.8.8.8:53", "Google", "DNS"),
-new (ServiceProtocolType.HTTP, "https://www.google.pt", "Google", "WWW"),
+new (ServiceProtocolType.HTTP, "https://www.google.com", "Google", "WWW"),
 new (ServiceProtocolType.HTTP, "https://www.sapo.pt", "Sapo", "WWW"),
-new (ServiceProtocolType.HTTP, "https://cefpporto.intraforserver.com", "Intrafor", "WWW"),
 new (ServiceProtocolType.ICMP, "9.9.9.9", "Quad9", "DNS"),
 new (ServiceProtocolType.ICMP, "76.76.2.0", "Control D", "DNS"),
 new (ServiceProtocolType.ICMP, "208.67.222.222", "OpenDNS Home", "DNS"),
@@ -104,8 +105,8 @@ new (ServiceProtocolType.ICMP, "192.95.54.3", "OpenNIC", "DNS"),
 new (ServiceProtocolType.ICMP, "193.110.81.9", "DNS0", "DNS"),
 new (ServiceProtocolType.ICMP, "194.242.2.2", "Mullvad", "DNS"),
 new (ServiceProtocolType.ICMP, "microsoft.com", "Microsoft", "DNS")
-
     ];
+#endif
 }
 
 public partial class NetworkInterfacesSettings : BaseSettings
@@ -209,7 +210,7 @@ public partial class NetworkInterfacesSettings : BaseSettings
         }
 
 
-        isInit = FilterStatus.Count == 0;
+        //isInit = FilterStatus.Count == 0;
         var statusValues = EnumExtensions.GetAllValues<OperationalStatus>(true);
         foreach (var value in statusValues)
         {

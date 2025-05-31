@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using NetSonar.Avalonia.Models;
-using NetSonar.Avalonia.SystemOS;
 using System.Diagnostics;
 using System;
 using System.IO;
@@ -14,7 +13,7 @@ public partial class App
 {
     public static ILogger Logger { get; private set; } = null!;
 
-    private void SetupLogger()
+    private static void SetupLogger()
     {
         var factory = LoggerFactory.Create(logging =>
         {
@@ -34,7 +33,7 @@ public partial class App
 
                 options.UsePlainTextFormatter(formatter =>
                 {
-                    formatter.SetPrefixFormatter($"(*){0}|{1}|", (in MessageTemplate template, in LogInfo info) => template.Format(info.Timestamp, info.LogLevel));
+                    formatter.SetPrefixFormatter($"(*){0}|{1}|", (in template, in info) => template.Format(info.Timestamp, info.LogLevel));
                     //formatter.SetSuffixFormatter($" ({0})", (in MessageTemplate template, in LogInfo info) => template.Format(info.Category));
                     //formatter.SetExceptionFormatter((writer, ex) => Utf8String.Format(writer, $"{ex.Message}"));
                 });
@@ -44,10 +43,7 @@ public partial class App
             // Add to output of simple rendered strings into memory. You can subscribe to this and use it.
             logging.AddZLoggerInMemory(processor =>
             {
-                processor.MessageReceived += renderedLogString =>
-                {
-                    Debug.WriteLine(renderedLogString);
-                };
+                processor.MessageReceived += WriteLine;
             });
 #endif
             // Output Structured Logging, setup options

@@ -17,9 +17,8 @@ public partial class App
     #region Utilities
 
     public static string Software => EntryApplication.AssemblyProduct!;
-    public static string VersionString => EntryApplication.AssemblyVersion!.ToString(3);
-    public static string VersionArch => $"{VersionString} {RuntimeInformation.ProcessArchitecture}";
-    public static string SoftwareWithVersion => $"{Software} v{VersionString}";
+    public static string VersionArch => $"{EntryApplication.AssemblyVersionString} {RuntimeInformation.ProcessArchitecture}";
+    public static string SoftwareWithVersion => $"{Software} v{EntryApplication.AssemblyVersionString}";
     public static string SoftwareWithVersionArch => $"{Software} v{VersionArch}";
     public static string SoftwareWithVersionRuntime => $"{SoftwareWithVersion} ({RuntimeInformation.RuntimeIdentifier})";
 

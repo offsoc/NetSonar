@@ -108,7 +108,6 @@ public partial class PingableServiceGraphFragmentModel : ViewModelBase, IDisposa
 
     [ObservableProperty] public partial Paint ThemePaint { get; set; } = new SolidColorPaint(new SKColor(255, 255, 255));
 
-    private Binding ThemePaintBinding;
 
 
     public PingableServiceGraphFragmentModel()
@@ -121,11 +120,7 @@ public partial class PingableServiceGraphFragmentModel : ViewModelBase, IDisposa
         RepliesXAxesCollection = _repliesXAxes.ToNotifyCollectionChangedSlim(SynchronizationContextCollectionEventDispatcher.Current);
         RepliesYAxesCollection = _repliesYAxes.ToNotifyCollectionChangedSlim(SynchronizationContextCollectionEventDispatcher.Current);
 
-        ThemePaintBinding = new Binding
-        {
-            Source = this,
-            Path = nameof(ThemePaintBinding)
-        };
+
 
         _singleGraphSeries =
         [

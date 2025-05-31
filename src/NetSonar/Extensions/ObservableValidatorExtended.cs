@@ -9,7 +9,7 @@ public partial class ObservableValidatorExtended : ObservableValidator
     [ObservableProperty]
     public partial string ValidationErrors { get; protected set; } = string.Empty;
 
-    protected List<string> CustomErrors { get; } = new();
+    protected List<string> CustomErrors { get; } = [];
 
     public new bool HasErrors => base.HasErrors || CustomErrors.Count > 0;
 

@@ -22,6 +22,7 @@ public abstract partial class BasePingableCollectionObject<T> : ObservableObject
         public required T Reply { get; init; }
 
         [SetsRequiredMembers]
+        // ReSharper disable once ConvertToPrimaryConstructor
         public PingCompletedEventArgs(T reply)
         {
             Reply = reply;
@@ -46,7 +47,7 @@ public abstract partial class BasePingableCollectionObject<T> : ObservableObject
     /// Gets the replies list for this service.
     /// </summary>
     [JsonIgnore]
-    public ObservableList<T> Pings { get; } = new();
+    public ObservableList<T> Pings { get; } = [];
 
     /// <summary>
     /// Gets the date and time this service was created.

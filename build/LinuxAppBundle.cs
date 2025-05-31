@@ -67,7 +67,7 @@ public static class LinuxAppBundle
                 Type=Application
 
                 Name={build.SoftwareName}
-                Comment={Regex.Replace(build.SoftwareDescription, @"\r\n?|\n", " ", RegexOptions.Multiline)}
+                Comment={build.SoftwareSummary.ReplaceLineEndings(";")}
                 Categories=Network;Monitor;
                 Keywords={build.SoftwarePackageTags}
 

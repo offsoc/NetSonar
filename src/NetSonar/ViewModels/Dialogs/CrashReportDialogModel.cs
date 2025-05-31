@@ -76,14 +76,14 @@ public partial class CrashReportDialogModel : ViewModelBase
 
 
     [RelayCommand]
-    public void RestartApplication()
+    public static void RestartApplication()
     {
         EntryApplication.LaunchNewInstance();
         CloseWindow();
     }
 
     [RelayCommand]
-    public void CloseWindow()
+    public static void CloseWindow()
     {
         Environment.Exit(0);
     }

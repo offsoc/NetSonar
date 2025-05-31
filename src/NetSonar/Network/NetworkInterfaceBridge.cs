@@ -1,15 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Net.NetworkInformation;
-using System.Net.Sockets;
-using System.Text.Json;
-using System.Threading.Tasks;
-using Avalonia;
+﻿using Avalonia;
 using Avalonia.Collections;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
@@ -28,8 +17,19 @@ using NetSonar.Avalonia.Views;
 using NetSonar.Avalonia.Views.Fragments;
 using ObservableCollections;
 using SukiUI.Dialogs;
-using SukiUI.Toasts;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Text.Json;
+using System.Threading.Tasks;
 using ZLinq;
+using ZLogger;
 
 namespace NetSonar.Avalonia.Network;
 
@@ -363,7 +363,7 @@ public partial class NetworkInterfaceBridge : ObservableObject, IDisposable
         }
         else
         {
-            success = await ProcessXExtensions.ExecuteHandled($"ip link set \"{Interface.Name}\" down", toast);
+            success = await ProcessXExtensions.ExecuteHandled($"ip link set \"{Interface.Name}\" down", toast, true);
         }
 
         if (success) Reset();
@@ -476,66 +476,107 @@ public partial class NetworkInterfaceBridge : ObservableObject, IDisposable
 
     public async Task SetStaticIP(string ipAddress, string subnetMask, string? gateway = null)
     {
-        var ipaddress = IPAddress.Parse(ipAddress);
+        if (!IPAddress.TryParse(ipAddress, out var ipaddress))
+        {
+            App.Logger.ZLogError($"Invalid IP address format: {ipaddress}");
+            return;
+        }
+        if(!IPAddress.TryParse(subnetMask, out var mask))
+        {
+            App.Logger.ZLogError($"Invalid subnet mask format: {subnetMask}");
+            return;
+        }
+
+        if (gateway is not null && !IPAddress.TryParse(gateway, out var gatewayAddress))
+        {
+            App.Logger.ZLogError($"Invalid gateway address format: {gateway}");
+            return;
+        }
+
         bool isIPv4 = ipaddress.AddressFamily == AddressFamily.InterNetwork;
+        int version = isIPv4 ? 4 : 6;
+
+        var toast = new ProcessXToast
+        {
+            Title = Interface.Description,
+            SuccessGenericMessage = $"IP address successfully set to {ipAddress} {subnetMask} {gateway}",
+            ErrorGenericMessage = $"Unable set static IPv{version} for \"{Interface.Name}\"."
+        };
+
         if (OperatingSystem.IsWindows())
         {
             var ipVersion = isIPv4 ? "ipv4" : "ipv6";
-            var process = $"netsh interface {ipVersion} set address name=\"{Interface.Name}\" static {ipAddress} {subnetMask} {gateway}";
-            if (!Environment.IsPrivilegedProcess) process = $"gsudo {process}";
-            await ProcessX.StartAsync(process).ToTask();
+            await ProcessXExtensions.ExecuteHandled($"netsh interface {ipVersion} set address name=\"{Interface.Name}\" static {ipAddress} {subnetMask} {gateway}", toast, true);
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+
+            var maskCidr = IPAddressExtensions.MaskToCidr(mask);
+            await ProcessXExtensions.ExecuteHandled($"nmcli device modify \"{Interface.Name}\" ipv4.addresses {IPv4Address}/{maskCidr} ipv4.gateway \"{gateway}\" ipv4.method manual", toast);
+
         }
     }
 
-
-    public async Task SetDhcpIP(bool toIPv6 = false)
+    [RelayCommand]
+    public async Task SetDhcpIP(IPVersion ipVersion)
     {
-        int version = toIPv6 ? 6 : 4;
-        string[] result = [];
-        try
+        int[] versions = ipVersion switch
+        {
+            IPVersion.V4 => [4],
+            IPVersion.V6 => [6],
+            IPVersion.V4_V6 => [4, 6],
+            _ => throw new ArgumentOutOfRangeException(nameof(ipVersion), ipVersion, null)
+        };
+
+        var versionStr = versions.AsValueEnumerable().JoinToString('+');
+
+        var toast = new ProcessXToast
+        {
+            Title = Interface.Description,
+            SuccessGenericMessage = $"IP address successfully set to DHCPv{versionStr}",
+            ErrorGenericMessage = $"Unable set DHCPv{versionStr} for \"{Interface.Name}\"."
+        };
+
+        List<string> commands = [];
+        var requireAdminRights = false;
+
+        foreach (var version in versions)
         {
             if (OperatingSystem.IsWindows())
             {
-                var process = $"netsh interface ipv{version} set address name=\"{Interface.Name}\" source=dhcp";
-                if (!Environment.IsPrivilegedProcess) process = $"gsudo {process}";
-                await ProcessX.StartAsync(process).ToTask();
+                requireAdminRights = true;
+                if (version == 4) commands.Add($"netsh interface ipv{version} set address name=\"{Interface.Name}\" source=dhcp");
+                else if (version == 6)
+                {
+                    commands.AddRange([
+                        $"netsh interface ipv6 set interface \"{Interface.Name}\" dhcp=enabled",
+                        $"netsh interface ipv6 set interface \"{Interface.Name}\" routerdiscovery=enabled"
+                    ]);
+                }
             }
-
-            if (result.Length == 0) result = [$"IP address successfully set to DHCPv{version}."];
-            if (result.Length > 0)
+            else if (OperatingSystem.IsMacOS())
             {
-                App.ToastManager.CreateSimpleInfoToast()
-                    .OfType(NotificationType.Success)
-                    .WithTitle(Interface.Description)
-                    .WithContent(string.Join(Environment.NewLine, result))
-                    .Dismiss().After(RuntimeGlobals.ToastDismissAfter)
-                    .Queue();
+                requireAdminRights = true;
+                if (version == 4) commands.Add($"networksetup -setdhcp \"{Interface.Name}\"");
+                else if (version == 6) commands.Add($"networksetup -setv6automatic \"{Interface.Name}\"");
             }
+            else if (OperatingSystem.IsLinux())
+            {
+                commands.AddRange([
+                    $"nmcli device modify \"{Interface.Name}\" ipv{version}.method auto",
+                    $"nmcli device modify \"{Interface.Name}\" ipv{version}.gateway \"\"",
+                    $"nmcli device modify \"{Interface.Name}\" ipv{version}.address \"\""
+                ]);
 
-            Reset();
+            }
         }
-        catch (ProcessErrorException ex)
-        {
-            if (ex.ExitCode == 999) return; // Cancelled by user
-            App.ShowExceptionToast(ex, Interface.Description, $"Unable set DHCPv{version} for \"{Interface.Name}\".");
-        }
-        catch (Exception ex)
-        {
-            App.ShowExceptionToast(ex, Interface.Description, $"Unable set DHCPv{version} for \"{Interface.Name}\".");
-        }
+
+        await ProcessXExtensions.ExecuteHandled(commands, toast, requireAdminRights);
+
+        Reset();
+
     }
 
-    [RelayCommand]
-    public Task SetDhcpV4()
-    {
-        return SetDhcpIP();
-    }
-
-    [RelayCommand]
-    public Task SetDhcpV6()
-    {
-        return SetDhcpIP(true);
-    }
 
     public async Task SetStaticDns(string dnsAddress1, string? dnsAddress2 = null)
     {

@@ -8,7 +8,7 @@ namespace NetSonar.Avalonia.Cache;
 
 public sealed class PropertiesSnapshot
 {
-    private readonly Dictionary<string, object?> _propertyCache = new();
+    private readonly Dictionary<string, object?> _propertyCache = [];
 
     private object? _rootObject;
 

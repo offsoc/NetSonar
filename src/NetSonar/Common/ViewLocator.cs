@@ -39,5 +39,5 @@ public class ViewLocator(AppViews views) : IDataTemplate
 
     public bool Match(object? data) => data is ObservableObject;
 
-    private static TextBlock CreateText(string text) => new TextBlock { Text = text };
+    private static TextBlock CreateText(string text) => new() { Text = text };
 }

@@ -5,7 +5,7 @@ namespace NetSonar.Avalonia.Views;
 
 public partial class GenericWindow : SukiWindowExtended
 {
-    public AppSettings AppSettings => AppSettings.Instance;
+    public static AppSettings AppSettings => AppSettings.Instance;
 
     public GenericWindow()
     {

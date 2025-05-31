@@ -7,6 +7,7 @@ using NetSonar.Avalonia.Controls;
 using NetSonar.Avalonia.ViewModels.Dialogs;
 using SukiUI.Dialogs;
 using Updatum;
+using ZLogger;
 
 namespace NetSonar.Avalonia;
 
@@ -17,7 +18,7 @@ public partial class App
     /// </summary>
     public const double CheckUpdateHourInterval = 2; // Hours
 
-    internal static readonly UpdatumManager AppUpdater = new("sn4k3", "UVtools", new Version("5.0.0"))
+    internal static readonly UpdatumManager AppUpdater = new(EntryApplication.AssemblyRepositoryUrl)
     {
         InstallUpdateWindowsInstallerArguments = "/qb",
         InstallUpdateSingleFileExecutableName = Software,
@@ -35,6 +36,7 @@ public partial class App
         try
         {
             var updateFound = await AppUpdater.CheckForUpdatesAsync();
+            Logger.ZLogInformation($"Checking for updates: ({updateFound})");
             if (!updateFound && showNoUpdateFoundMessage)
             {
                 ShowToast(NotificationType.Success, "No updates available.", $"{SoftwareWithVersion} is running the latest version.");
@@ -78,7 +80,7 @@ public partial class App
         ];
         CreateToast(NotificationType.Information, $"{Software} update found",
             $"""
-             Current version: {VersionString}
+             Current version: {EntryApplication.AssemblyVersionString}
              New version: {release.TagName}
              Release(s) ahead: {AppUpdater.ReleasesAheadCount}
              Release date: {release.CreatedAt.ToLocalTime():f}

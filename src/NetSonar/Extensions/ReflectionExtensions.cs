@@ -155,7 +155,7 @@ public static class ReflectionExtensions
                                 }
                                 else
                                 {
-                                    zsb.AppendLiteral($"{{{address.Address.ToString()}, {nameof(address.IPv4Mask)}: {address.IPv4Mask}}}");
+                                    zsb.AppendLiteral($"{{{address.Address}, {nameof(address.IPv4Mask)}: {address.IPv4Mask}}}");
                                 }
                             }
 

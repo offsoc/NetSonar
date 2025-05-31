@@ -1,17 +1,14 @@
 ﻿using Cysharp.Diagnostics;
 using System;
-using System.Buffers;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Utf8StringInterpolation;
 
 namespace NetSonar.Avalonia.SystemOS;
 
 public class TemporaryBatchScript : IDisposable
 {
-    private readonly StringBuilder _builder = new StringBuilder();
+    private readonly StringBuilder _builder = new();
 
     /// <summary>
     /// Gets or sets a value indicating whether the batch script requires admin rights.

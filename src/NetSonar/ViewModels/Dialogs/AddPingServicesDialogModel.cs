@@ -19,7 +19,7 @@ namespace NetSonar.Avalonia.ViewModels.Dialogs;
 
 public partial class AddPingServicesDialogModel : DialogViewModelBase
 {
-    public FastObservableCollection<NewPingService> Services { get; } = new();
+    public FastObservableCollection<NewPingService> Services { get; } = [];
 
     public AddPingServicesDialogModel(ISukiDialog dialog) : base(dialog)
     {

@@ -40,7 +40,7 @@ public partial class InstanceAlreadyRunningDialogModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void CloseWindow()
+    public static void CloseWindow()
     {
         Environment.Exit(0);
     }

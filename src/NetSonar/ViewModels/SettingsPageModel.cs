@@ -24,7 +24,7 @@ public partial class SettingsPageModel : PageViewModelBase
     [ObservableProperty]
     public partial bool IsDarkTheme { get; set; }
 
-    public ObservableList<SukiColorTheme> AvailableColors { get; } = new(App.Theme.ColorThemes);
+    public ObservableList<SukiColorTheme> AvailableColors { get; } = [.. App.Theme.ColorThemes];
 
 
     public SettingsPageModel()
@@ -61,7 +61,7 @@ public partial class SettingsPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void SwitchToColorThemeCommand(SukiColorTheme color)
+    public static void SwitchToColorThemeCommand(SukiColorTheme color)
     {
         AppSettings.ThemeColor = color.DisplayName;
         App.Theme.ChangeColorTheme(color);

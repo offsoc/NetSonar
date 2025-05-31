@@ -1,11 +1,13 @@
-﻿using Cysharp.Diagnostics;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
-using System.Diagnostics;
-using Avalonia.Controls.Notifications;
+﻿using Avalonia.Controls.Notifications;
+using Cysharp.Diagnostics;
 using NetSonar.Avalonia.SystemOS;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Threading;
+using System.Threading.Tasks;
 using ZLinq;
+using ZLogger;
 
 namespace NetSonar.Avalonia.Extensions;
 
@@ -35,7 +37,7 @@ public static class ProcessXExtensions
         return ExecuteHandled([command], toast, requireAdminRights);
     }
 
-    public static async Task<bool> ExecuteHandled(IEnumerable<string> commands, ProcessXToast toast, bool requireAdminRights = true)
+    public static async Task<bool> ExecuteHandled(IEnumerable<string> commands, ProcessXToast toast, bool requireAdminRights = false)
     {
         var commandList = commands as string[] ?? commands.AsValueEnumerable().ToArray();
         if (commandList.Length == 0) return false;
@@ -58,6 +60,7 @@ public static class ProcessXExtensions
                 {
                     try
                     {
+                        App.Logger.ZLogInformation($"Run command: gsudo cache on");
                         await ProcessX.StartAsync("gsudo cache on").ToTask();
                         gsudoCache = true;
                     }
@@ -97,7 +100,8 @@ public static class ProcessXExtensions
                     return false;
                 }
 
-                commandList = [$"pkexec bash -c '{string.Join(" && ", commandList).Replace('\'', '"')}'"];
+                commandList = [$"pkexec bash -c \"{string.Join(" && ", commandList).Replace('"', '\'')}\""];
+                Console.WriteLine(commandList[0]);
             }
         }
 
@@ -120,6 +124,7 @@ public static class ProcessXExtensions
 
             try
             {
+                App.Logger.ZLogInformation($"Run command: {processCommand}");
                 var (process, stdOut, stdError) = ProcessX.GetDualAsyncEnumerable(processCommand);
 
                 var consumeStdOut = Task.Run(async () =>
@@ -128,8 +133,9 @@ public static class ProcessXExtensions
                     await foreach (var item in stdOut)
                     {
                         if(string.IsNullOrWhiteSpace(item)) continue;
-                        stdBuffered.Add(item);
                         currentStdBuffered.Add(item);
+                        if (stdBuffered.Count > 0 && stdBuffered[^1] == item) continue;
+                        stdBuffered.Add(item);
                     }
                 });
 
@@ -157,6 +163,13 @@ public static class ProcessXExtensions
                     if (requireAdminRights && errorBuffered.Count > 0)
                     {
                         if (ex.ExitCode == 1 && errorBuffered[^1].EndsWith("(-128)")) break; // Cancelled by user
+                    }
+                }
+                else if (OperatingSystem.IsLinux())
+                {
+                    if (requireAdminRights && errorBuffered.Count > 0)
+                    {
+                        if (ex.ExitCode == 126) break; // Cancelled by user
                     }
                 }
                 var msg = string.Empty;
@@ -189,11 +202,8 @@ public static class ProcessXExtensions
         {
             try
             {
-                Process.Start(new ProcessStartInfo("gsudo", "cache off")
-                {
-                    CreateNoWindow = true,
-                    UseShellExecute = false
-                });
+                App.Logger.ZLogInformation($"Run command: gsudo cache off");
+                await ProcessX.StartAsync("gsudo cache off").ToTask();
             }
             catch
             {
@@ -203,7 +213,10 @@ public static class ProcessXExtensions
 
         if (success)
         {
-            var msg = stdBuffered.Count > 0 && !toast.ShowOnlySuccessGenericMessage
+            var msg = stdBuffered.Count > 0 
+                      && !toast.ShowOnlySuccessGenericMessage
+                      && !stdBuffered[0].Equals("Ok", StringComparison.OrdinalIgnoreCase)
+                      && !stdBuffered[0].Equals("Ok.", StringComparison.OrdinalIgnoreCase)
                 ? string.Join(Environment.NewLine, stdBuffered)
                 : toast.SuccessGenericMessage;
             App.ShowToast(NotificationType.Success, toast.Title, msg);

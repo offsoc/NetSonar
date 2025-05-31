@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.IO.Compression;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Nuke.Common;
@@ -425,7 +426,7 @@ public class Build : NukeBuild
                 {
                     if (IsUnix)
                     {
-                        if (RIds.Contains("osx-x64") && RIds.Contains("osx-arm64"))
+                        if (Enumerable.Contains(RIds, "osx-x64") && Enumerable.Contains(RIds, "osx-arm64"))
                         {
                             Log.Information("Bundling macOS multi-arch app.");
                             var macOSRootAppPath = PublishDirectory / $"{SoftwareName}_osx-multiarch_v{SoftwareVersion}.app";

@@ -32,7 +32,7 @@ public class CrashReports : List<CrashReport>
             App.HandleSafeException(e, $"Read {Path.GetFileName(App.CrashReportsFile)}");
         }
 
-        return new CrashReports();
+        return [];
     });
 
     public static CrashReports Instance => LazyInstance.Value;

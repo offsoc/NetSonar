@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Avalonia.Controls.Notifications;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NetSonar.Avalonia.SystemOS;
@@ -20,7 +19,7 @@ public partial class MainViewModel : ViewModelBase
 
     public MainViewModel(IEnumerable<PageViewModelBase> pages)
     {
-        Pages = new List<PageViewModelBase>(pages);
+        Pages = [.. pages];
         if (Pages.Count > 0) ActivePage = Pages[0];
     }
 
@@ -35,7 +34,7 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void ShowAboutDialog()
+    public static void ShowAboutDialog()
     {
         var dialog = DialogManager
             .CreateDialog()
@@ -44,25 +43,25 @@ public partial class MainViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    public void OpenProfileFolder()
+    public static void OpenProfileFolder()
     {
         SystemAware.StartProcess(App.ProfilePath);
     }
 
     [RelayCommand]
-    public Task CheckForUpdatesAsync()
+    public static Task CheckForUpdatesAsync()
     {
         return App.CheckForUpdatesAsync();
     }
 
     [RelayCommand]
-    public void OpenExecutableFolder()
+    public static void OpenExecutableFolder()
     {
         SystemAware.StartProcess(AppContext.BaseDirectory);
     }
 
     [RelayCommand]
-    public async Task TriggerNewUpdate()
+    public static async Task TriggerNewUpdate()
     {
         if (App.AppUpdater.Releases.Count == 0)
         {
@@ -80,12 +79,12 @@ public partial class MainViewModel : ViewModelBase
 
 
     [RelayCommand]
-    public void ThrowException()
+    public static void ThrowException()
     {
         int i = 50;
         int zero = 0;
 
         // ReSharper disable once IntDivisionByZero
-        var result = i / zero;
+        _ = i / zero;
     }
 }

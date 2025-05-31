@@ -9,7 +9,7 @@ public partial class App
 {
     public static SukiTheme Theme { get; private set; } = null!;
 
-    private void SetupTheme()
+    private static void SetupTheme()
     {
         Theme = SukiTheme.GetInstance();
         ChangeBaseTheme(AppSettings.Theme);

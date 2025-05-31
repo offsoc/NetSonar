@@ -46,7 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: |
-          git tag ${{ needs.get_version.outputs.release_version }}
+          git tag -a "${{ needs.get_version.outputs.release_version }}" -m "Release ${{ needs.get_version.outputs.release_version }}"
           git push origin ${{ needs.get_version.outputs.release_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

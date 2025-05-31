@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Avalonia.Controls;
 using CommunityToolkit.Mvvm.ComponentModel;
 using Microsoft.Extensions.DependencyInjection;
 using NetSonar.Avalonia.ViewModels;
+using Updatum;
 
 namespace NetSonar.Avalonia.Common;
 
@@ -57,13 +59,13 @@ public class AppViews
         {
             view = Activator.CreateInstance(viewType) as Control;
 
-            if (view != null)
+            if (view is not null)
             {
                 view.DataContext = viewModel;
             }
         }
 
-        return view != null;
+        return view is not null;
     }
 
     public Control CreateView<TViewModel>(IServiceProvider provider) where TViewModel : ObservableObject

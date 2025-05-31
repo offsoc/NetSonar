@@ -137,7 +137,7 @@ public partial class NetworkInterfacesPageModel : PageViewModelBase
         // Remove gone interfaces
         using (var keysToRemove = Interfaces
                    .AsValueEnumerable()
-                   .Where(adapter => !keys.Contains(adapter.Value.Interface.Id))
+                   .Where(adapter => !keys.AsValueEnumerable().Contains(adapter.Value.Interface.Id))
                    .Select(adapter => adapter.Value.Interface.Id)
                    .ToArrayPool())
         {
@@ -209,7 +209,7 @@ public partial class NetworkInterfacesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void OpenSystemNetworkManager()
+    public static void OpenSystemNetworkManager()
     {
         if (OperatingSystem.IsWindows())
         {

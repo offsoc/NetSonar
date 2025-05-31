@@ -17,6 +17,7 @@
         <Description>NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), managing network interfaces, and discovering local devices/services.
 Features multi-protocol latency checks, subnet scanning, port/service detection, and real-time interface configuration.
 Designed for administrators and developers needing lightweight, cross-platform network analysis.</Description>
+        <Version>0.1.0</Version>
 
         <!-- Package -->
         <ApplicationIcon>$(MSBuildThisFileDirectory)media\$(ProductName).ico</ApplicationIcon>
@@ -25,7 +26,6 @@ Designed for administrators and developers needing lightweight, cross-platform n
         <PackageProjectUrl>$(RepositoryUrl)</PackageProjectUrl>
         <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
 
-        <Version>0.1.0</Version>
         <PackageTags>Network;Diagnostics;Monitoring;ICMP;TCP;UDP;HTTP;Ping;Port-Scanning;Service-Discovery;Subnet-Scanner;Network-Management;Network-Interfaces;Cross-Platform;Admin;DevOps;IT;Tools</PackageTags>
 
         <!-- Set the path map and artifacts path. -->
@@ -52,12 +52,9 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
     </PropertyGroup>
 
-    <!-- Assembly Information -->
+    <!-- AssemblyMetadata Information -->
     <ItemGroup>
-        <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
-            <_Parameter1>Authors</_Parameter1>
-            <_Parameter2>$(Authors)</_Parameter2>
-        </AssemblyAttribute>
+        <AssemblyMetadata Include="Authors" Value="$(Authors)"/>
     </ItemGroup>
 
     <!-- GitHub Actions -->

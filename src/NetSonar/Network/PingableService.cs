@@ -89,7 +89,7 @@ public partial class PingableService : BasePingableCollectionObject<PingableServ
     /// Gets the ping options.
     /// </summary>
     [JsonIgnore]
-    public PingOptions PingOptions => new PingOptions(Ttl, DontFragment);
+    public PingOptions PingOptions => new(Ttl, DontFragment);
     #endregion
 
     #region Constructor
@@ -141,7 +141,16 @@ public partial class PingableService : BasePingableCollectionObject<PingableServ
             var sentDateTime = DateTime.Now;
             try
             {
-                var reply = ping.Send(IpAddressOrUrl, timeout, _sendBuffer, UseDefaultPingOptions ? null : PingOptions);
+                PingReply reply;
+                if (OperatingSystem.IsLinux() && !Environment.IsPrivilegedProcess)
+                {
+                    reply = ping.Send(IpAddressOrUrl, timeout);
+                }
+                else
+                {
+                    reply = ping.Send(IpAddressOrUrl, timeout, _sendBuffer, UseDefaultPingOptions ? null : PingOptions);
+                }
+
                 return new PingableServiceReply(reply);
             }
             catch (Exception e)
@@ -175,8 +184,18 @@ public partial class PingableService : BasePingableCollectionObject<PingableServ
             var sentOn = DateTime.Now;
             try
             {
-                var reply = await ping.SendPingAsync(IpAddressOrUrl, TimeSpan.FromMilliseconds(timeout), _sendBuffer, UseDefaultPingOptions ? null : PingOptions, cancellationToken);
+                PingReply reply;
+                if (OperatingSystem.IsLinux() && !Environment.IsPrivilegedProcess)
+                {
+                    reply = await ping.SendPingAsync(IpAddressOrUrl, TimeSpan.FromMilliseconds(timeout), cancellationToken:cancellationToken);
+                }
+                else
+                {
+                    reply = await ping.SendPingAsync(IpAddressOrUrl, TimeSpan.FromMilliseconds(timeout), _sendBuffer, UseDefaultPingOptions ? null : PingOptions, cancellationToken);
+                }
+
                 return new PingableServiceReply(reply);
+
             }
             catch (OperationCanceledException e)
             {

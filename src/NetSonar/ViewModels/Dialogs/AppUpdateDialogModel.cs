@@ -11,13 +11,13 @@ namespace NetSonar.Avalonia.ViewModels.Dialogs;
 
 public partial class AppUpdateDialogModel : DialogViewModelBase
 {
-    public UpdatumManager AppUpdater => App.AppUpdater;
+    public static UpdatumManager AppUpdater => App.AppUpdater;
 
     private readonly CancellationTokenSource _cancellationTokenSource = new();
 
     public Release Release { get; }
 
-    public string? Changelog => AppUpdater.GetChangelog();
+    public static string? Changelog => AppUpdater.GetChangelog();
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(AutoUpdateCommand))]

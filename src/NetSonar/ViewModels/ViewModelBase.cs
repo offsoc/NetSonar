@@ -13,13 +13,13 @@ namespace NetSonar.Avalonia.ViewModels;
 
 public partial class ViewModelBase : ObservableValidatorExtended
 {
-    public RuntimeGlobals RuntimeGlobals => App.RuntimeGlobals;
-    public AppSettings AppSettings => App.AppSettings;
+    public static RuntimeGlobals RuntimeGlobals => App.RuntimeGlobals;
+    public static AppSettings AppSettings => App.AppSettings;
 
-    public TopLevel TopLevel => App.TopLevel;
+    public static TopLevel TopLevel => App.TopLevel;
 
-    public SukiDialogManager DialogManager => App.DialogManager;
-    public SukiToastManager ToastManager => App.ToastManager;
+    public static SukiDialogManager DialogManager => App.DialogManager;
+    public static SukiToastManager ToastManager => App.ToastManager;
 
     /*public static TopLevel? TopLevel
     {
@@ -51,30 +51,30 @@ public partial class ViewModelBase : ObservableValidatorExtended
     protected internal virtual void OnUnloaded(){}
 
     [RelayCommand]
-    public Task<bool> LaunchUriAsync(string url)
+    public static Task<bool> LaunchUriAsync(string url)
     {
         return App.LaunchUriAsync(url);
     }
 
     [RelayCommand]
-    public Task CopyToClipboardWithToast(object? text)
+    public static Task CopyToClipboardWithToast(object? text)
     {
         return App.CopyToClipboard(text?.ToString(), true);
     }
 
     [RelayCommand]
-    public Task CopyToClipboardWithoutToast(object? text)
+    public static Task CopyToClipboardWithoutToast(object? text)
     {
         return App.CopyToClipboard(text?.ToString(), false);
     }
 
 
-    public SukiDialogBuilder CreateMessageBox(NotificationType type, string? title = null, object? content = null)
+    public static SukiDialogBuilder CreateMessageBox(NotificationType type, string? title = null, object? content = null)
     {
         return CreateMessageBox(title, content).OfType(type);
     }
 
-    public SukiDialogBuilder CreateMessageBox(string? title = null, object? content = null)
+    public static SukiDialogBuilder CreateMessageBox(string? title = null, object? content = null)
     {
         var dialog = DialogManager.CreateDialog();
         if (title is not null)
@@ -89,7 +89,7 @@ public partial class ViewModelBase : ObservableValidatorExtended
         return dialog;
     }
 
-    public SukiDialogBuilder CreateMessageBoxYesNo(NotificationType type, string? title, object? content,
+    public static SukiDialogBuilder CreateMessageBoxYesNo(NotificationType type, string? title, object? content,
         Action<ISukiDialog> yesAction, Action<ISukiDialog>? noAction = null)
     {
         var dialog = CreateMessageBox(type, title, content)
@@ -110,7 +110,7 @@ public partial class ViewModelBase : ObservableValidatorExtended
         return dialog;
     }
 
-    public SukiDialogBuilder CreateMessageBoxYesNoCancel(NotificationType type, string? title, object? content,
+    public static SukiDialogBuilder CreateMessageBoxYesNoCancel(NotificationType type, string? title, object? content,
         Action<ISukiDialog> yesAction, Action<ISukiDialog>? noAction = null, Action<ISukiDialog>? cancelAction = null)
     {
 

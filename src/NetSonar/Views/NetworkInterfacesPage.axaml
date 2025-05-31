@@ -33,6 +33,7 @@
                            ItemSpacing="10"
                            LineSpacing="5"
                            Orientation="Horizontal">
+
                     <StackPanel VerticalAlignment="Center"
                                 Orientation="Horizontal"
                                 Spacing="10">
@@ -79,8 +80,8 @@
                             <StackPanel Orientation="Horizontal"
                                         Spacing="5">
                                 <CheckBox IsChecked="{Binding AppSettings.NetworkInterfaces.EnableFilterTypes}" />
-                                <icon:MaterialIcon Kind="Filter" />
-                                <TextBlock Text="Type" />
+                                <icon:MaterialIconText Kind="Filter"
+                                                       Text="Type" />
                             </StackPanel>
                         </DropDownButton.Content>
                         <DropDownButton.DataTemplates>
@@ -112,8 +113,8 @@
                             <StackPanel Orientation="Horizontal"
                                         Spacing="5">
                                 <CheckBox IsChecked="{Binding AppSettings.NetworkInterfaces.EnableFilterStatus}" />
-                                <icon:MaterialIcon Kind="Filter" />
-                                <TextBlock Text="Status" />
+                                <icon:MaterialIconText Kind="Filter"
+                                                       Text="Status" />
                             </StackPanel>
                         </DropDownButton.Content>
                         <DropDownButton.DataTemplates>
@@ -140,13 +141,14 @@
                         </DropDownButton.Flyout>
                     </DropDownButton>
 
-                    <DropDownButton IsEnabled="{Binding FilterText, Converter={x:Static StringConverters.IsNullOrEmpty}}">
+                    <DropDownButton Classes="Small"
+                                    IsEnabled="{Binding FilterText, Converter={x:Static StringConverters.IsNullOrEmpty}}">
                         <DropDownButton.Content>
                             <StackPanel Orientation="Horizontal"
                                         Spacing="5">
                                 <CheckBox IsChecked="{Binding AppSettings.NetworkInterfaces.EnableFilterOthers}" />
-                                <icon:MaterialIcon Kind="Filter" />
-                                <TextBlock Text="Others" />
+                                <icon:MaterialIconText Kind="Filter"
+                                                       Text="Others" />
                             </StackPanel>
                         </DropDownButton.Content>
                         <DropDownButton.Flyout>
@@ -195,6 +197,7 @@
                     </DropDownButton>
 
                     <TextBox Width="300"
+                             VerticalAlignment="Center"
                              suki:TextBoxExtensions.AddDeleteButton="True"
                              Text="{Binding FilterText, Delay=500}"
                              Watermark="Filter interfaces by text" />

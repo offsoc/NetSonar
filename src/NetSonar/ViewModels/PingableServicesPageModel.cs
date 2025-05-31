@@ -41,14 +41,14 @@ public partial class PingableServicesPageModel : PageViewModelBase
 
     private readonly Timer _timer = new(500);
 
-    public int ServicesCount => Services.Count;
+    public static int ServicesCount => Services.Count;
     [ObservableProperty] public partial int ServicesFailedCount { get; private set; }
     [ObservableProperty] public partial int ServicesSucceededCount { get; private set; }
 
 
     [ObservableProperty] public partial string FilterText { get; set; } = string.Empty;
 
-    public ObservableList<PingableService> Services => AppSettings.PingServices.Services;
+    public static ObservableList<PingableService> Services => AppSettings.PingServices.Services;
 
     public IWritableSynchronizedView<PingableService, PingableService> ServicesView { get; }
     public NotifyCollectionChangedSynchronizedViewList<PingableService> ServicesViewCollection { get; }
@@ -105,7 +105,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
             }
         };*/
 
-        Services.CollectionChanged += (in NotifyCollectionChangedEventArgs<PingableService> args) =>
+        Services.CollectionChanged += (in args) =>
         {
             OnPropertyChanged(nameof(ServicesCount));
         };
@@ -324,7 +324,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void AddServices()
+    public static void AddServices()
     {
         var dialog = DialogManager
             .CreateDialog()
@@ -352,7 +352,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void PauseAllServices()
+    public static void PauseAllServices()
     {
         if (Services.Count == 0) return;
         foreach (var service in Services)
@@ -380,7 +380,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void ResumeAllServices()
+    public static void ResumeAllServices()
     {
         if (Services.Count == 0) return;
         foreach (var service in Services)
@@ -432,7 +432,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void ResetAllServicesStatistics()
+    public static void ResetAllServicesStatistics()
     {
         if (Services.Count == 0) return;
         CreateMessageBoxYesNo(NotificationType.Warning,
@@ -466,7 +466,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void RemoveAllServices()
+    public static void RemoveAllServices()
     {
         if (Services.Count == 0) return;
         CreateMessageBoxYesNo(NotificationType.Warning,
@@ -514,7 +514,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public async Task ExportAllServicesToJson()
+    public static async Task ExportAllServicesToJson()
     {
         if (Services.Count == 0) return;
         using var file = await TopLevel.StorageProvider.SaveFilePickerAsync(new FilePickerSaveOptions
