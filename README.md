@@ -28,3 +28,39 @@ Designed for administrators and developers needing lightweight, cross-platform n
 ![NetSonar Pings Multi](https://raw.githubusercontent.com/sn4k3/NetSonar/refs/heads/main/media/screenshots/NetSonar_screenshot_pings_multi.png)
 ![NetSonar Pings Chart](https://raw.githubusercontent.com/sn4k3/NetSonar/refs/heads/main/media/screenshots/NetSonar_screenshot_pings_chart.png)
 ![NetSonar Interfaces](https://raw.githubusercontent.com/sn4k3/NetSonar/refs/heads/main/media/screenshots/NetSonar_screenshot_interfaces.png)
+
+
+# Requirements
+
+## Windows
+
+1. Windows 10 or greater
+2. 4GB RAM or higher
+3. 64 bit System
+4. 1920 x 1080 @ 100% scale as minimum resolution
+
+## Linux
+
+1. 4GB RAM or higher
+2. 64 bit System
+3. 1920 x 1080 @ 100% scale as minimum resolution
+
+## Mac
+
+1. macOS 13 Monterey or higher
+2. 4GB RAM or higher
+
+
+# Support my work / Donate
+
+All my work here is given for free (OpenSource), it took some hours to build, test and polish the program.
+If you're happy to contribute for a better program and for my work i will appreciate the tip.  
+Use one of the following methods:
+
+[![GitHub Sponsors](https://img.shields.io/badge/Donate-Sponsor-red?style=for-the-badge)](https://github.com/sponsors/sn4k3)
+[![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge)](https://paypal.me/SkillTournament)
+
+# Contributors 
+
+[![GitHub contributors](https://img.shields.io/github/contributors/sn4k3/NetSonar?style=for-the-badge)](https://github.com/sn4k3/NetSonar/graphs/contributors)  
+[![Contributors](https://contrib.rocks/image?repo=sn4k3/NetSonar)](https://github.com/sn4k3/NetSonar/graphs/contributors)
