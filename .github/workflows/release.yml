@@ -22,11 +22,7 @@ jobs:
         run: |
           echo 'Check for Directory.Build.props'
           # Check for Directory.Build.props
-          if [ ! -f 'Directory.Build.props' ]; then
-            echo 'HEASDASD'
-            echo "::error::Directory.Build.props file not found."
-            exit 1
-          fi
+
 
           # Extract AssemblyVersion
           assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props)
