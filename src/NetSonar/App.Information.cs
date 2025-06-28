@@ -83,7 +83,7 @@ public partial class App
     /// <summary>
     /// Gets born date and time
     /// </summary>
-    public static DateTime Born => DateTime.SpecifyKind(new(2020, 4, 6, 20, 33, 14), DateTimeKind.Utc);
+    public static DateTime Born => DateTime.SpecifyKind(new(2025, 7, 1, 17, 00, 00), DateTimeKind.Utc);
 
     /// <summary>
     /// Gets years

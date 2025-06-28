@@ -1,4 +1,4 @@
-﻿<Project Sdk="WixToolset.Sdk/6.0.0">
+﻿<Project Sdk="WixToolset.Sdk/6.0.1">
   <PropertyGroup>
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
     <OutputName>$(ProductName)_win-$(Platform)_v$(Version)</OutputName>
@@ -31,9 +31,9 @@
     <None Include="Resources\EULA.rtf" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.0" />
-    <PackageReference Include="WixToolset.Iis.wixext" Version="6.0.0" />
-    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.0" />
+    <PackageReference Include="WixToolset.Util.wixext" Version="6.0.1" />
+    <PackageReference Include="WixToolset.Iis.wixext" Version="6.0.1" />
+    <PackageReference Include="WixToolset.UI.wixext" Version="6.0.1" />
   </ItemGroup>
   <Target Name="ShowReservedProperties" AfterTargets="BeforeBuild">
     <Message Text=" HarvestPath = $(HarvestPath)" Importance="high" />

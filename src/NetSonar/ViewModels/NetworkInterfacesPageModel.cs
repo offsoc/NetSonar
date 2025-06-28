@@ -154,6 +154,24 @@ public partial class NetworkInterfacesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
+    public void ClearFilters()
+    {
+        FilterText = string.Empty;
+    }
+
+    [RelayCommand]
+    public void AttachStatusOnlineFilter()
+    {
+        FilterText = "status:active";
+    }
+
+    [RelayCommand]
+    public void AttachStatusOfflineFilter()
+    {
+        FilterText = "status:inactive";
+    }
+
+    [RelayCommand]
     public void ReAttachFilters()
     {
         InterfacesView.AttachFilter(pair =>
@@ -191,6 +209,20 @@ public partial class NetworkInterfacesPageModel : PageViewModelBase
                 var splitText = FilterText.Split(' ', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
                 foreach (var word in splitText)
                 {
+                    if (word.Equals("status:up", StringComparison.OrdinalIgnoreCase) ||
+                        word.Equals("status:active", StringComparison.OrdinalIgnoreCase) ||
+                        word.Equals("status:online", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return pair.Value.IsActive;
+                    }
+
+                    if (word.Equals("status:down", StringComparison.OrdinalIgnoreCase) ||
+                        word.Equals("status:inactive", StringComparison.OrdinalIgnoreCase) ||
+                        word.Equals("status:offline", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return !pair.Value.IsActive;
+                    }
+
                     if (pair.Value.Interface.Id.Contains(word, StringComparison.OrdinalIgnoreCase)) return true;
                     if (pair.Value.Interface.Name.Contains(word, StringComparison.OrdinalIgnoreCase)) return true;
                     if (pair.Value.Interface.Description.Contains(word, StringComparison.OrdinalIgnoreCase)) return true;

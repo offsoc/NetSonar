@@ -634,6 +634,7 @@ public partial class SetInterfaceIPDialogModel : DialogViewModelBase
                     else if (OperatingSystem.IsLinux())
                     {
                         commands.Add($"nmcli device modify \"{NetworkInterface.Interface.Name}\" ipv4.ignore-auto-dns no");
+                        commands.Add($"nmcli device modify \"{NetworkInterface.Interface.Name}\" ipv4.dns \"\"");
                     }
 
                     zsb.AppendLine("DNSv4=DHCP");
@@ -747,6 +748,7 @@ public partial class SetInterfaceIPDialogModel : DialogViewModelBase
                     else if (OperatingSystem.IsLinux())
                     {
                         commands.Add($"nmcli device modify \"{NetworkInterface.Interface.Name}\" ipv6.ignore-auto-dns no");
+                        commands.Add($"nmcli device modify \"{NetworkInterface.Interface.Name}\" ipv6.dns \"\"");
                     }
 
                     zsb.AppendLine("DNSv6=DHCP");

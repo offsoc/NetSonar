@@ -306,7 +306,7 @@ public partial class PingableServicesPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public void ClearFiltersCommand()
+    public void ClearFilters()
     {
         FilterText = string.Empty;
     }

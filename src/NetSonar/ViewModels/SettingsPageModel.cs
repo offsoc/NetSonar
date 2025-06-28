@@ -61,7 +61,7 @@ public partial class SettingsPageModel : PageViewModelBase
     }
 
     [RelayCommand]
-    public static void SwitchToColorThemeCommand(SukiColorTheme color)
+    public void SwitchToColorTheme(SukiColorTheme color)
     {
         AppSettings.ThemeColor = color.DisplayName;
         App.Theme.ChangeColorTheme(color);

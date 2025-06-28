@@ -42,7 +42,7 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
         <!-- Avalonia -->
         <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
-        <AvaloniaVersion>11.3.0</AvaloniaVersion>
+        <AvaloniaVersion>11.3.2</AvaloniaVersion>
 
         <!-- MvvmToolkit -->
         <MvvmToolkitEnableINotifyPropertyChangingSupport>false</MvvmToolkitEnableINotifyPropertyChangingSupport>

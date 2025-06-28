@@ -49,22 +49,22 @@
                                 Padding="15,5"
                                 VerticalAlignment="Center"
                                 Classes="Information Rounded"
-                                Content="{Binding InterfaceCount}"
-                                IsEnabled="False" />
+                                Command="{Binding ClearFiltersCommand}"
+                                Content="{Binding InterfaceCount}" />
 
                         <Button MinWidth="45"
                                 Padding="15,5"
                                 VerticalAlignment="Center"
                                 Classes="Success Rounded"
-                                Content="{Binding OnlineInterfaceCount}"
-                                IsEnabled="False" />
+                                Command="{Binding AttachStatusOnlineFilterCommand}"
+                                Content="{Binding OnlineInterfaceCount}" />
 
                         <Button MinWidth="45"
                                 Padding="15,5"
                                 VerticalAlignment="Center"
                                 Classes="Danger Rounded"
-                                Content="{Binding OfflineInterfaceCount}"
-                                IsEnabled="False" />
+                                Command="{Binding AttachStatusOfflineFilterCommand}"
+                                Content="{Binding OfflineInterfaceCount}" />
 
                         <Button MinWidth="45"
                                 Padding="15,5"

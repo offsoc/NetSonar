@@ -19,6 +19,26 @@ public static class IPAddressExtensions
     }
 
     /// <summary>
+    /// Determines the IP version of the specified <see cref="IPAddress"/>.
+    /// </summary>
+    /// <param name="ipAddress">The <see cref="IPAddress"/> instance to evaluate. Cannot be <see langword="null"/>.</param>
+    /// <returns>The IP version as an integer: <see langword="6"/> for IPv6 addresses, or <see langword="4"/> for IPv4 addresses.</returns>
+    public static int GetIPVersion(this IPAddress ipAddress)
+    {
+        return ipAddress.AddressFamily == AddressFamily.InterNetworkV6 ? 6 : 4;
+    }
+
+    /// <summary>
+    /// Returns a string representation of the IP version for the specified <see cref="IPAddress"/>.
+    /// </summary>
+    /// <param name="ipAddress">The <see cref="IPAddress"/> instance for which the IP version string is generated.</param>
+    /// <returns>A string indicating the IP version, formatted as "IPv4" for IPv4 addresses or "IPv6" for IPv6 addresses.</returns>
+    public static string GetIPVersionStr(this IPAddress ipAddress)
+    {
+        return $"IPv{ipAddress.GetIPVersion()}";
+    }
+
+    /// <summary>
     /// Convert a CIDR prefix length to a subnet mask "255.255.255.0" format.
     /// </summary>
     public static IPAddress CidrToMask(int cidr, AddressFamily family = AddressFamily.InterNetwork)

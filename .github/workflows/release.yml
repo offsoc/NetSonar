@@ -10,50 +10,109 @@ on:
         type: boolean
 
 jobs:
-  get_version:
-    name: '🔍 Get Version'
+  extract_information:
+    name: '🔍 Extract release information'
     runs-on: ubuntu-latest
-    outputs:
-      base_version: ${{ steps.version.outputs.base_version }}
-      release_version: ${{ steps.version.outputs.release_version }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Extract version from Directory.Build.props
-        id: version
+      # 🔍 Extract Version from Directory.Build.props
+      - name: 🔍 Extract Version
+        id: extract_version
         run: |
-          # Extract version from XML file
-          VERSION=$(grep -oP '<Version>\K[^<]+' Directory.Build.props)
+          # Directory.Build.props
+          if [ ! -f 'Directory.Build.props' ]; then
+            echo "::error::Directory.Build.props file not found."
+            exit 1
+          fi
 
-          # Remove -dev suffix if present
-          BASE_VERSION="${VERSION%-dev}"
+          # Extract AssemblyVersion
+          assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props)
+
+          # Extract Version
+          version=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props)
+
+
+          # If Version not found, use AssemblyVersion
+          if [ -z "$version" ]; then
+            version="$(assemblyVersion)"
+          fi
+
+          if [ ! -z "$assemblyVersion" ]; then
+            # Replace $(AssemblyVersion) in version with the value of assemblyVersion
+            version=$(echo "$version" | sed "s/\$(AssemblyVersion)/$assemblyVersion/g")
+          fi
 
           # Ensure version is valid
-          if [[ ! "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.[0-9]+)?)?$ ]]; then
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.?[0-9]+)?)?$ ]]; then
             echo "::error::Invalid version format in Directory.Build.props: $VERSION"
             exit 1
           fi
 
-          echo "base_version=$BASE_VERSION" >> $GITHUB_OUTPUT
-          echo "release_version=v$BASE_VERSION" >> $GITHUB_OUTPUT
-          echo "Found version: $VERSION, releasing: v$BASE_VERSION"
+          echo "Version=$version" >> $GITHUB_ENV
+          echo "Extracted and Resolved AssemblyVersion: $assemblyVersion"
+          echo "Extracted and Resolved Version: $version"
 
-  create_tag:
-    name: '🏷️ Create Tag'
-    needs: get_version
-    if: ${{ !inputs.dry_run }}
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: |
-          git tag -a "${{ needs.get_version.outputs.release_version }}" -m "Release ${{ needs.get_version.outputs.release_version }}"
-          git push origin ${{ needs.get_version.outputs.release_version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # 📝 Parse changelog for the version
+      - name: 📝 Parse changelog
+        id: parse_changelog
+        run: |
+          version=${{ env.Version }}
+          echo "Looking for version: $version"
+
+          # Create pattern that matches:
+          # - Normal versions: # v1.1.1 (24/05/2025)
+          # - Prerelease versions: # v1.1.1-beta.1 (24/05/2025) or # v1.1.1-rc (24/05/2025)
+          version_pattern="^# v?${version//./\\.}(-[a-zA-Z]+(\.?[0-9]+)?)? \([0-9]{2}/[0-9]{2}/[0-9]{4}\)$"
+          echo "Using pattern: '$version_pattern'"
+
+          # Debug: Show matching lines
+          echo "Matching lines in CHANGELOG.md:"
+          grep -En "$version_pattern" CHANGELOG.md || echo "No matches found"
+
+          # Find the line number using extended regex
+          start_line=$(grep -En "$version_pattern" CHANGELOG.md | cut -d: -f1)
+
+          if [ -z "$start_line" ]; then
+            echo "::error::Could not find version $version in CHANGELOG.md"
+            echo "First few lines of CHANGELOG.md:"
+            head -n 5 CHANGELOG.md
+            exit 1
+          fi
+
+          # Find next version header (with prerelease support)
+          next_version_pattern="^# v?[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z]+(\.[0-9]+)?)? "
+          next_version_line=$(tail -n +$((start_line+1)) CHANGELOG.md | grep -En -m 1 "$next_version_pattern" | cut -d: -f1)
+
+          if [ -z "$next_version_line" ]; then
+            changelog=$(tail -n +$((start_line+1)) CHANGELOG.md)
+          else
+            changelog=$(tail -n +$((start_line+1)) CHANGELOG.md | head -n $((next_version_line-1)))
+          fi
+
+          # Clean up the changelog content
+          changelog=$(echo "$changelog" | sed -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}')
+
+          if [ -z "$changelog" ]; then
+            echo "::error::Empty changelog for version $version"
+            exit 1
+          fi
+
+          echo "Extracted changelog content:"
+          echo "---"
+          echo "$changelog"
+          echo "---"
+
+          # Use heredoc to properly handle multi-line content
+          #delimiter="EOF_$(date +%s)"
+          #echo "Changelog<<${delimiter}" >> $GITHUB_ENV
+          #echo "$changelog" >> $GITHUB_ENV
+          #echo "${delimiter}" >> $GITHUB_ENV
+          echo "Changelog=$changelog" >> $GITHUB_ENV
 
   build:
     name: '🛠️ Build (${{ matrix.rid }})'
-    needs: get_version
+    needs: extract_information
     strategy:
       matrix:
         include:
@@ -98,11 +157,27 @@ jobs:
             artifacts/publish/*.zip
             artifacts/publish/*.AppImage
             artifacts/publish/*.msi
+            artifacts/publish/*.dmg
           if-no-files-found: error
+
+  create_tag:
+    name: '🏷️ Create Tag'
+    needs: build
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "${{ env.Version }}" -m "Release v${{ env.Version }}"
+          git push origin "${{ env.Version }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create_release:
     name: '🎉 Create Release'
-    needs: build
+    needs: create_tag
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
@@ -114,34 +189,11 @@ jobs:
         with:
           path: release-artifacts
 
-      - name: Extract changelog
-        id: changelog
-        run: |
-          VERSION="${{ needs.get_version.outputs.base_version }}"
-          # Match both formats: "# 1.1.0" and "# v1.1.0"
-          CHANGELOG_CONTENT=$(awk -v version="$VERSION" '
-            BEGIN { print=0 }
-            /^# (v)?'"${VERSION}"' / {
-              print=1; next
-            }
-            /^# (v)?[0-9]+\.[0-9]+\.[0-9]+ / {
-              if (print) exit
-            }
-            print { print }
-          ' repo/CHANGELOG.md)
-
-          # Escape for GitHub output
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//'%'/'%25'}"
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\n'/'%0A'}"
-          CHANGELOG_CONTENT="${CHANGELOG_CONTENT//$'\r'/'%0D'}"
-
-          echo "changelog=${CHANGELOG_CONTENT}" >> $GITHUB_OUTPUT
-
       - uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ needs.get_version.outputs.release_version }}
-          name: Release ${{ needs.get_version.outputs.release_version }}
-          body: ${{ steps.changelog.outputs.changelog }}
+          tag_name: ${{ env.Version }}
+          name: v${{ env.Version }}
+          body: ${{ env.Changelog }}
           files: release-artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

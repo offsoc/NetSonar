@@ -13,7 +13,7 @@ public partial class App
 
     public static readonly HttpClient HttpClient = new();
 
-    public static readonly JsonSerializerOptions JsonSerializerOptions = new()
+    public static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.General)
     {
         WriteIndented = true,
         NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals,

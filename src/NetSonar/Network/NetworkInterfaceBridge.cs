@@ -487,7 +487,7 @@ public partial class NetworkInterfaceBridge : ObservableObject, IDisposable
             return;
         }
 
-        if (gateway is not null && !IPAddress.TryParse(gateway, out var gatewayAddress))
+        if (gateway is not null && !IPAddress.TryParse(gateway, out _))
         {
             App.Logger.ZLogError($"Invalid gateway address format: {gateway}");
             return;
@@ -581,34 +581,99 @@ public partial class NetworkInterfaceBridge : ObservableObject, IDisposable
     public async Task SetStaticDns(string dnsAddress1, string? dnsAddress2 = null)
     {
         var ipaddress1 = IPAddress.Parse(dnsAddress1);
-        bool isIPv4_1 = ipaddress1.AddressFamily == AddressFamily.InterNetwork;
+        var ipVersion = ipaddress1.GetIPVersion();
+
 
         if (dnsAddress2 is not null)
         {
-            var ipaddress2 = IPAddress.Parse(dnsAddress2);
-            bool isIPv4_2 = ipaddress2.AddressFamily == AddressFamily.InterNetwork;
+            _ = IPAddress.Parse(dnsAddress2);
         }
+
+        var commands = new List<string>();
+        bool requireAdminRights = false;
 
         if (OperatingSystem.IsWindows())
         {
-            var ipVersion = isIPv4_1 ? "ipv4" : "ipv6";
-            var process = $"netsh interface {ipVersion} set dnsservers name=\"{Interface.Name}\" static {dnsAddress1}";
-            if (!Environment.IsPrivilegedProcess) process = $"gsudo {process}";
-            await ProcessX.StartAsync(process).ToTask();
+            commands.Add($"netsh interface ipv{ipVersion} set dnsservers name=\"{Interface.Name}\" static {dnsAddress1} validate=no");
+            requireAdminRights = true;
         }
+        else if (OperatingSystem.IsMacOS())
+        {
+            commands.Add($"networksetup -setdnsservers \"{Interface.Name}\" {dnsAddress1} {dnsAddress2}");
+            requireAdminRights = true;
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            commands.Add($"nmcli device modify \"{Interface.Name}\" ipv{ipVersion}.dns \"{dnsAddress1} {dnsAddress2}\"");
+            commands.Add($"nmcli device modify \"{Interface.Name}\" ipv{ipVersion}.ignore-auto-dns yes");
+        }
+
+
+        if (dnsAddress2 is not null)
+        {
+            if (OperatingSystem.IsWindows())
+            {
+                commands.Add($"netsh interface ipv4 add dnsservers name=\"{Interface.Name}\" {dnsAddress2} validate=no");
+            }
+        }
+
+        await ProcessXExtensions.ExecuteHandled(commands, new ProcessXToast()
+        {
+            Title = $"DNS assignment for \"{Interface.Name}\"",
+            SuccessGenericMessage = $"DNS servers successfully assigned: {dnsAddress1} {dnsAddress2}",
+            ErrorGenericMessage = "Unable to assign DNS.",
+        }, requireAdminRights);
     }
 
 
     [RelayCommand]
-    public async Task SetDhcpDns(bool toIPv6 = false)
+    public async Task SetDhcpDns(IPVersion ipVersion)
     {
+        var commands = new List<string>();
+        bool requireAdminRights = false;
+
         if (OperatingSystem.IsWindows())
         {
-            var ipVersion = toIPv6 ? "ipv4" : "ipv6";
-            var process = $"netsh interface {ipVersion} set dnsservers name=\"{Interface.Name}\" source=dhcp";
-            if (!Environment.IsPrivilegedProcess) process = $"gsudo {process}";
-            await ProcessX.StartAsync(process).ToTask();
+            if (ipVersion is IPVersion.V4 or IPVersion.V4_V6)
+            {
+                commands.Add($"netsh interface ipv4 set dnsservers name=\"{Interface.Name}\" source=dhcp");
+            }
+            if (ipVersion is IPVersion.V6 or IPVersion.V4_V6)
+            {
+                commands.Add($"netsh interface ipv6 set dnsservers name=\"{Interface.Name}\" source=dhcp");
+            }
+
+            requireAdminRights = true;
         }
+        else if (OperatingSystem.IsMacOS())
+        {
+            if (ipVersion is IPVersion.V4 or IPVersion.V4_V6)
+            {
+                commands.Add($"networksetup -setdnsservers \"{Interface.Name}\" empty");
+            }
+
+            requireAdminRights = true;
+        }
+        else if (OperatingSystem.IsLinux())
+        {
+            if (ipVersion is IPVersion.V4 or IPVersion.V4_V6)
+            {
+                commands.Add($"nmcli device modify \"{Interface.Name}\" ipv4.ignore-auto-dns no");
+                commands.Add($"nmcli device modify \"{Interface.Name}\" ipv4.dns \"\"");
+            }
+            if (ipVersion is IPVersion.V6 or IPVersion.V4_V6)
+            {
+                commands.Add($"nmcli device modify \"{Interface.Name}\" ipv6.ignore-auto-dns no");
+                commands.Add($"nmcli device modify \"{Interface.Name}\" ipv6.dns \"\"");
+            }
+        }
+
+        await ProcessXExtensions.ExecuteHandled(commands, new ProcessXToast()
+        {
+            Title = $"DNS assignment for \"{Interface.Name}\"",
+            SuccessGenericMessage = "DHCP DNS successfully assigned",
+            ErrorGenericMessage = "Unable to assign DHCP DNS.",
+        }, requireAdminRights);
     }
 
     [RelayCommand]
