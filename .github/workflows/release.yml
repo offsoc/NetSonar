@@ -12,107 +12,7 @@ on:
 jobs:
   extract_information:
     name: '🔍 Extract release information'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      # 🔍 Extract Version from Directory.Build.props
-      - name: 🔍 Extract Version
-        id: extract_version
-        run: |
-          # Check for Directory.Build.props
-          if [ ! -f 'Directory.Build.props' ]; then
-            echo "::error::Directory.Build.props file not found."
-            exit 1
-          fi
-
-          # Extract AssemblyVersion
-          assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props || true)
-
-          # Extract Version
-          version=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props || true)
-
-          if [ -z "$version" -a -z "$assemblyVersion" ]; then
-            echo "::error::Unable to extract the project version."
-            exit 1
-          fi
-
-          # If Version not found, use AssemblyVersion
-          if [ -z "$version" ]; then
-            version="$(assemblyVersion)"
-          fi
-
-          #if [ ! -z "$assemblyVersion" ]; then
-          #  # Replace $(AssemblyVersion) in version with the value of assemblyVersion
-          #  version=$(echo "$version" | sed "s/\$(AssemblyVersion)/$assemblyVersion/g")
-          #fi
-
-          # Ensure version is valid
-          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.?[0-9]+)?)?$ ]]; then
-            echo "::error::Invalid version format in Directory.Build.props: $version"
-            exit 1
-          fi
-
-          echo "Extracted and Resolved AssemblyVersion: $assemblyVersion"
-          echo "Extracted and Resolved Version: $version"
-          echo "Version=$version" >> $GITHUB_ENV
-
-      # 📝 Parse changelog for the version
-      - name: 📝 Parse changelog
-        id: parse_changelog
-        run: |
-          version=${{ env.Version }}
-          echo "Looking for version: $version"
-
-          # Create pattern that matches:
-          # - Normal versions: # v1.1.1 (24/05/2025)
-          # - Prerelease versions: # v1.1.1-beta.1 (24/05/2025) or # v1.1.1-rc (24/05/2025)
-          version_pattern="^# v?${version//./\\.}(-[a-zA-Z]+(\.?[0-9]+)?)? \([0-9]{2}/[0-9]{2}/[0-9]{4}\)$"
-          echo "Using pattern: '$version_pattern'"
-
-          # Debug: Show matching lines
-          echo "Matching lines in CHANGELOG.md:"
-          grep -En "$version_pattern" CHANGELOG.md || echo "No matches found"
-
-          # Find the line number using extended regex
-          start_line=$(grep -En "$version_pattern" CHANGELOG.md | cut -d: -f1)
-
-          if [ -z "$start_line" ]; then
-            echo "::error::Could not find version $version in CHANGELOG.md"
-            echo "First few lines of CHANGELOG.md:"
-            head -n 5 CHANGELOG.md
-            exit 1
-          fi
-
-          # Find next version header (with prerelease support)
-          next_version_pattern="^# v?[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z]+(\.[0-9]+)?)? "
-          next_version_line=$(tail -n +$((start_line+1)) CHANGELOG.md | grep -En -m 1 "$next_version_pattern" | cut -d: -f1)
-
-          if [ -z "$next_version_line" ]; then
-            changelog=$(tail -n +$((start_line+1)) CHANGELOG.md)
-          else
-            changelog=$(tail -n +$((start_line+1)) CHANGELOG.md | head -n $((next_version_line-1)))
-          fi
-
-          # Clean up the changelog content
-          changelog=$(echo "$changelog" | sed -e '/./,$!d' -e :a -e '/^\n*$/{$d;N;ba' -e '}')
-
-          if [ -z "$changelog" ]; then
-            echo "::error::Empty changelog for version $version"
-            exit 1
-          fi
-
-          echo "Extracted changelog content:"
-          echo "---"
-          echo "$changelog"
-          echo "---"
-
-          # Use heredoc to properly handle multi-line content
-          #delimiter="EOF_$(date +%s)"
-          #echo "Changelog<<${delimiter}" >> $GITHUB_ENV
-          #echo "$changelog" >> $GITHUB_ENV
-          #echo "${delimiter}" >> $GITHUB_ENV
-          echo "Changelog=$changelog" >> $GITHUB_ENV
+    uses: sn4k3/Actions/.github/workflows/extract-csproj-information.yml@main
 
   build:
     name: '🛠️ Build (${{ matrix.rid }})'
@@ -166,22 +66,23 @@ jobs:
 
   create_tag:
     name: '🏷️ Create Tag'
-    needs: build
+    needs: [build, extract_information]
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: |
+          version="${{ jobs.extract_information.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -a "${{ env.Version }}" -m "Release v${{ env.Version }}"
-          git push origin "${{ env.Version }}"
+          git tag -a "$version" -m "Release v$version"
+          git push origin "$version"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create_release:
     name: '🎉 Create Release'
-    needs: create_tag
+    needs: [extract_information, build, create_tag]
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
@@ -201,3 +102,5 @@ jobs:
           files: release-artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          Version: ${{ jobs.extract_information.outputs.version }}
+          Changelog: ${{ jobs.extract_information.outputs.changelog }}
