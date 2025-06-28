@@ -20,21 +20,29 @@ jobs:
       - name: 🔍 Extract Version
         id: extract_version
         run: |
-          echo 'Check for Directory.Build.props'
+          echo '1'
           # Check for Directory.Build.props
+          if [ ! -f 'Directory.Build.props' ]; then
+            echo 'HEASDASD'
+            echo "::error::Directory.Build.props file not found."
+            exit 1
+          fi
 
-
+          echo '2'
           # Extract AssemblyVersion
           assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props)
 
+          echo '3'
           # Extract Version
           version=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props)
 
+          echo '4'
           if [ -z "$version" -a -z "$assemblyVersion" ]; then
             echo "::error::Unable to extract the project version."
             exit 1
           fi
 
+          echo '5'
           # If Version not found, use AssemblyVersion
           if [ -z "$version" ]; then
             version="$(assemblyVersion)"
@@ -45,6 +53,7 @@ jobs:
           #  version=$(echo "$version" | sed "s/\$(AssemblyVersion)/$assemblyVersion/g")
           #fi
 
+          echo '6'
           # Ensure version is valid
           if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9]+(\.?[0-9]+)?)?$ ]]; then
             echo "ssssss"
