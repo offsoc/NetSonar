@@ -20,10 +20,10 @@ jobs:
       - name: 🔍 Extract Version
         id: extract_version
         run: |
-          cd "${GITHUB_WORKSPACE}"
-          # Directory.Build.props
+          echo 'Check for Directory.Build.props'
+          # Check for Directory.Build.props
           if [ ! -f 'Directory.Build.props' ]; then
-            echo 'HEASDASD';
+            echo 'HEASDASD'
             echo "::error::Directory.Build.props file not found."
             exit 1
           fi
