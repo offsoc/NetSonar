@@ -23,18 +23,17 @@ jobs:
           echo '1'
           # Check for Directory.Build.props
           if [ ! -f 'Directory.Build.props' ]; then
-            echo 'HEASDASD'
             echo "::error::Directory.Build.props file not found."
             exit 1
           fi
 
           echo '2'
           # Extract AssemblyVersion
-          assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props)
+          assemblyVersion=$(grep -oP '(?<=<AssemblyVersion>).*?(?=</AssemblyVersion>)' Directory.Build.props || true)
 
           echo '3'
           # Extract Version
-          version=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props)
+          version=$(grep -oP '(?<=<Version>).*?(?=</Version>)' Directory.Build.props || true)
 
           echo '4'
           if [ -z "$version" -a -z "$assemblyVersion" ]; then
