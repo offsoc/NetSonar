@@ -79,16 +79,16 @@ download(){
     sleep 0.5
 }
 
-echo ' _   _      _   _____                        '
-echo '| \ | |    | | /  ___|                       '
-echo '|  \| | ___| |_\ `--.  ___  _ __   __ _ _ __ '
-echo '| . ` |/ _ \ __|`--. \/ _ \| '\''_ \ / _` | '\''__|'
-echo '| |\  |  __/ |_/\__/ / (_) | | | | (_| | |   '
-echo '\_| \_/\___|\__\____/ \___/|_| |_|\__,_|_|   '
-echo '                                             '
-echo '  Auto download and installer script '
-echo ''
-echo '- Detecting OS'
+cat << "EOF"
+ _   _      _   ____                         
+| \ | | ___| |_/ ___|  ___  _ __   __ _ _ __ 
+|  \| |/ _ \ __\___ \ / _ \| '_ \ / _` | '__|
+| |\  |  __/ |_ ___) | (_) | | | | (_| | |   
+|_| \_|\___|\__|____/ \___/|_| |_|\__,_|_|   
+    Auto download and installer script
+
+- Detecting OS
+EOF
 
 if [ "${OSTYPE:0:6}" == "darwin" ]; then
     osVariant="osx"
