@@ -99,6 +99,8 @@ jobs:
           tag_name: ${{ env.Version }}
           name: v${{ env.Version }}
           body: ${{ env.Changelog }}
+          draft: false
+          prerelease: ${{ contains(env.Version, '-alpha') || contains(env.Version, '-beta') || contains(env.Version, '-preview') || contains(env.Version, '-rc') }}
           files: release-artifacts/**/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

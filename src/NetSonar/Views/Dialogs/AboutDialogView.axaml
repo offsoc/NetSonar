@@ -124,7 +124,7 @@
                 <SelectableTextBlock Grid.Row="2"
                                      Text="{Binding Source={x:Static updatum:EntryApplication.AssemblyCopyright}}" />
                 <SelectableTextBlock Grid.Row="3"
-                                     Text="{Binding Source={x:Static app:App.Authors}}" />
+                                     Text="{Binding Source={x:Static updatum:EntryApplication.AssemblyAuthors}}" />
 
                 <Svg Grid.Row="0"
                      Grid.RowSpan="4"

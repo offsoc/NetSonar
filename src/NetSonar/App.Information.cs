@@ -8,7 +8,6 @@ using System.Text;
 using Avalonia.Platform;
 using NetSonar.Avalonia.Extensions;
 using Updatum;
-using ZLinq;
 
 namespace NetSonar.Avalonia;
 
@@ -22,18 +21,6 @@ public partial class App
     public static string SoftwareWithVersionArch => $"{Software} v{VersionArch}";
     public static string SoftwareWithVersionRuntime => $"{SoftwareWithVersion} ({RuntimeInformation.RuntimeIdentifier})";
 
-    [field: AllowNull, MaybeNull]
-    public static string Authors
-    {
-        get
-        {
-            field ??= Assembly.GetExecutingAssembly().GetCustomAttributes<AssemblyMetadataAttribute>()
-                .AsValueEnumerable()
-                .FirstOrDefault(attribute => attribute.Key == "Authors")?.Value ?? string.Empty;
-            return field;
-        }
-    }
-
     public const string License = $"GNU Affero General Public License v3.0 ({LicenseShort})";
     public const string LicenseShort = "AGPLv3";
     public static string LicenseUrl => $"{EntryApplication.AssemblyRepositoryUrl}/blob/master/LICENSE";
@@ -42,9 +29,6 @@ public partial class App
 
     public const string DonateGitHubUrl = "https://github.com/sponsors/sn4k3";
     public const string DonatePayPalUrl = "https://www.paypal.com/donate/?hosted_button_id=3F9DKDNPWEYR6";
-
-    public static string ApplicationPath => AppContext.BaseDirectory;
-    public static string AppExecutable => Environment.ProcessPath!;
 
 
     [field: AllowNull, MaybeNull]
@@ -83,7 +67,7 @@ public partial class App
     /// <summary>
     /// Gets born date and time
     /// </summary>
-    public static DateTime Born => DateTime.SpecifyKind(new(2025, 7, 1, 17, 00, 00), DateTimeKind.Utc);
+    public static DateTime Born => DateTime.SpecifyKind(new(2025, 7, 1, 2, 00, 00), DateTimeKind.Utc);
 
     /// <summary>
     /// Gets years

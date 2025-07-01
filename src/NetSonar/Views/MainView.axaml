@@ -101,11 +101,11 @@
                             <MenuItem Header="Donate"
                                       Icon="{icon:MaterialIconExt Kind=DonateOutline}">
                                 <MenuItem Command="{Binding LaunchUriCommand}"
-                                          CommandParameter="https://github.com/sponsors/sn4k3"
+                                          CommandParameter="{x:Static app:App.DonateGitHubUrl}"
                                           Header="Github"
                                           Icon="{icon:MaterialIconExt Kind=Github}" />
                                 <MenuItem Command="{Binding LaunchUriCommand}"
-                                          CommandParameter="https://www.paypal.com/donate/?hosted_button_id=3F9DKDNPWEYR6"
+                                          CommandParameter="{x:Static app:App.DonatePayPalUrl}"
                                           Header="PayPal"
                                           Icon="P" />
                             </MenuItem>
