@@ -67,11 +67,11 @@ jobs:
   create_tag:
     name: '🏷️ Create Tag'
     needs: [build, extract_information]
+    if: ${{ !inputs.dry_run }}
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
-    if: ${{ !inputs.dry_run }}
-    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
@@ -88,6 +88,9 @@ jobs:
     needs: [extract_information, build, create_tag]
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
     steps:
       - uses: actions/checkout@v4
         with:
@@ -105,6 +108,7 @@ jobs:
           draft: false
           prerelease: ${{ contains(env.Version, '-alpha') || contains(env.Version, '-beta') || contains(env.Version, '-preview') || contains(env.Version, '-rc') }}
           files: release-artifacts/**/*
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           Version: ${{ needs.extract_information.outputs.version }}
           Changelog: ${{ needs.extract_information.outputs.changelog }}
