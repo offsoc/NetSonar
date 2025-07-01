@@ -67,18 +67,21 @@ jobs:
   create_tag:
     name: '🏷️ Create Tag'
     needs: [build, extract_information]
+    permissions:
+      contents: write
+      packages: write
     if: ${{ !inputs.dry_run }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
       - run: |
           version="${{ needs.extract_information.outputs.version }}"
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git tag -a "$version" -m "Release v$version"
           git push origin "$version"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   create_release:
     name: '🎉 Create Release'
@@ -103,6 +106,5 @@ jobs:
           prerelease: ${{ contains(env.Version, '-alpha') || contains(env.Version, '-beta') || contains(env.Version, '-preview') || contains(env.Version, '-rc') }}
           files: release-artifacts/**/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           Version: ${{ needs.extract_information.outputs.version }}
           Changelog: ${{ needs.extract_information.outputs.changelog }}
