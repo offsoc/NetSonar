@@ -33,7 +33,7 @@ Designed for administrators and developers needing lightweight, cross-platform n
 # Requirements
 
 - Windows 10 or greater
-- macOS 13 Monterey or higher
+- macOS 13 Monterey or greater
 - Linux (Debian, Ubuntu, Fedora, Arch, etc.)
 - 64 bit System (x64 / arm64)
 - 4GB RAM or higher
