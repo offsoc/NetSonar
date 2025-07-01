@@ -32,24 +32,12 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
 # Requirements
 
-## Windows
-
-1. Windows 10 or greater
-2. 4GB RAM or higher
-3. 64 bit System
-4. 1920 x 1080 @ 100% scale as minimum resolution
-
-## Linux
-
-1. 4GB RAM or higher
-2. 64 bit System
-3. 1920 x 1080 @ 100% scale as minimum resolution
-
-## Mac
-
-1. macOS 13 Monterey or higher
-2. 4GB RAM or higher
-
+- Windows 10 or greater
+- macOS 13 Monterey or higher
+- Linux (Debian, Ubuntu, Fedora, Arch, etc.)
+- 64 bit System (x64 / arm64)
+- 4GB RAM or higher
+- 1920 x 1080 @ 100% scale as minimum resolution
 
 # Support my work / Donate
 
