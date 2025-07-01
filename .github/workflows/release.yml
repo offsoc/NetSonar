@@ -112,3 +112,13 @@ jobs:
         env:
           Version: ${{ needs.extract_information.outputs.version }}
           Changelog: ${{ needs.extract_information.outputs.changelog }}
+
+      - name: Delete tag if release fails
+        if: failure()
+        run: |
+          version="${{ needs.extract_information.outputs.version }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git fetch --tags
+          git tag -d "$version"
+          git push --delete origin "$version"
