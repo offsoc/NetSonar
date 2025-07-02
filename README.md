@@ -12,6 +12,37 @@ NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), ma
 Features multi-protocol latency checks, subnet scanning, port/service detection, and real-time interface configuration.  
 Designed for administrators and developers needing lightweight, cross-platform network analysis.
 
+## Download the latest version at:
+
+## To auto install on Windows (package manager):
+
+- **Winget:** `winget install -e --id PTRTECH.NetSonar`
+
+**Note:** Winget is included on Windows 10 with recent updates and Windows 11 by default.
+
+## To auto install on Linux:
+
+```bash
+[ "$(command -v apt)" -a -z "$(command -v curl)" ] && sudo apt-get install -y curl 
+[ "$(command -v dnf)" -a -z "$(command -v curl)" ] && sudo dnf install -y curl
+[ "$(command -v pacman)" -a -z "$(command -v curl)" ] && sudo pacman -S curl
+[ "$(command -v zypper)" -a -z "$(command -v curl)" ] && sudo zypper install -y curl
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/sn4k3/NetSonar/main/scripts/install-netsonar.sh)"
+```
+
+## To auto install on MacOS:
+
+```bash
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/sn4k3/NetSonar/main/scripts/install-netsonar.sh)"
+```
+
+## To downgrade to a previous version:
+
+```bash
+# Replace x.x.x by the version you want to install
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/sn4k3/NetSonar/main/scripts/install-netsonar.sh)" -- x.x.x
+```
+
 ## Features
 
 - **Network Pings**: Perform ICMP/TCP/UDP/HTTP pings to check the availability and latency of network devices.
