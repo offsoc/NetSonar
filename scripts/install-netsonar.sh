@@ -126,8 +126,13 @@ if [ "$osVariant" == "osx" ]; then
     fi
 
     if ! testcmd codesign; then
-        echo '- Codesign required, installing...'
+        echo '- Codesign required, installing, please accept the prompt...'
         xcode-select --install
+        # Wait until installation is complete
+        until xcode-select -p &>/dev/null
+        do
+            sleep 2
+        done
     fi
 
     echo '- Detecting download'
