@@ -125,14 +125,9 @@ if [ "$osVariant" == "osx" ]; then
         exit -1
     fi
 
-    if ! testcmd codesign && ! testcmd brew; then
+    if ! testcmd codesign; then
         echo '- Codesign required, installing...'
-        bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        if [ -f "/opt/homebrew/bin/brew" -a -z "$(command -v brew)" ]; then
-            echo '# Set PATH, MANPATH, etc., for Homebrew.' >> "$HOME/.zprofile"
-            echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> "$HOME/.zprofile"
-            eval "$(/opt/homebrew/bin/brew shellenv)"
-        fi
+        xcode-select --install
     fi
 
     echo '- Detecting download'
