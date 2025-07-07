@@ -14,11 +14,13 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
 ## Download the latest version at:
 
+<!--
 ## To auto install on Windows (package manager):
 
 - **Winget:** `winget install -e --id PTRTECH.NetSonar`
 
 **Note:** Winget is included on Windows 10 with recent updates and Windows 11 by default.
+!-->
 
 ## To auto install on Linux:
 
@@ -77,7 +79,7 @@ If you're happy to contribute for a better program and for my work i will apprec
 Use one of the following methods:
 
 [![GitHub Sponsors](https://img.shields.io/badge/Donate-Sponsor-red?style=for-the-badge)](https://github.com/sponsors/sn4k3)
-[![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge)](https://paypal.me/SkillTournament)
+[![Donate PayPal](https://img.shields.io/badge/Donate-PayPal-blue?style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=5YCNRCYFRS4GG)
 
 # Contributors 
 
