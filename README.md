@@ -5,8 +5,8 @@
 [![Code size](https://img.shields.io/github/languages/code-size/sn4k3/NetSonar?style=for-the-badge)](#)
 [![GitHub release (latest by date including pre-releases)](https://img.shields.io/github/v/release/sn4k3/NetSonar?include_prereleases&style=for-the-badge)](https://github.com/sn4k3/NetSonar/releases)
 [![Downloads](https://img.shields.io/github/downloads/sn4k3/NetSonar/total?style=for-the-badge)](https://github.com/sn4k3/NetSonar/releases)
-[![Chocolatey](https://img.shields.io/chocolatey/dt/NetSonar?color=brown&label=Chocolatey&style=for-the-badge)](https://community.chocolatey.org/packages/NetSonar)
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/sn4k3?color=red&style=for-the-badge)](https://github.com/sponsors/sn4k3)
+<!--[![Chocolatey](https://img.shields.io/chocolatey/dt/NetSonar?color=brown&label=Chocolatey&style=for-the-badge)](https://community.chocolatey.org/packages/NetSonar)!-->
 
 NetSonar is a network diagnostics tool for pinging hosts (ICMP/TCP/UDP/HTTP), managing network interfaces, and discovering local devices/services.  
 Features multi-protocol latency checks, subnet scanning, port/service detection, and real-time interface configuration.  
@@ -14,13 +14,10 @@ Designed for administrators and developers needing lightweight, cross-platform n
 
 ## Download the latest version at:
 
-<!--
 ## To auto install on Windows (package manager):
 
 - **Winget:** `winget install -e --id PTRTECH.NetSonar`
-
-**Note:** Winget is included on Windows 10 with recent updates and Windows 11 by default.
-!-->
+- Winget is included on Windows 10 with recent updates and Windows 11 by default.
 
 ## To auto install on Linux:
 
