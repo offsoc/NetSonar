@@ -9,6 +9,10 @@ on:
         default: true
         type: boolean
 
+env:
+   WINGET_PACKAGE_ID: PTRTECH.NetSonar
+   WINGET_TOKEN: ${{ secrets.WINGET_TOKEN }}
+
 jobs:
   extract_information:
     name: '🔍 Extract release information'
@@ -122,3 +126,12 @@ jobs:
           git fetch --tags
           git tag -d "$version"
           git push --delete origin "$version"
+
+  winget:
+    name: 🚀 Winget - Pull request
+    runs-on: windows-latest
+    steps:
+      - uses: vedantmgoyal2009/winget-releaser@v2
+        with:
+          identifier: ${{ env.WINGET_PACKAGE_ID }}
+          token: ${{ env.WINGET_TOKEN }}

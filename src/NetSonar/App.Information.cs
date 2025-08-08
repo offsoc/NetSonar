@@ -28,7 +28,7 @@ public partial class App
     public const string CountryShort = "PT";
 
     public const string DonateGitHubUrl = "https://github.com/sponsors/sn4k3";
-    public const string DonatePayPalUrl = "https://www.paypal.com/donate/?hosted_button_id=3F9DKDNPWEYR6";
+    public const string DonatePayPalUrl = "https://www.paypal.com/donate/?hosted_button_id=5YCNRCYFRS4GG";
 
 
     [field: AllowNull, MaybeNull]

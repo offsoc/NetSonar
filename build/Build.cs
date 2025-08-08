@@ -258,11 +258,15 @@ public class Build : NukeBuild
                                 var macOSAppPath = macOSRootAppPath / $"{SoftwareName}.app";
                                 var macOSAppContentsPath = macOSAppPath / "Contents";
                                 var macOSMacOSBinPath = macOSAppContentsPath / "MacOS";
+                                var macOSAppResourcesPath = macOSAppContentsPath / "Resources";
                                 var macOSAppBinPath = macOSMacOSBinPath / rid;
                                 var macOSAppEntryScriptPath = macOSMacOSBinPath / $"{SoftwareName}.sh";
                                 var macOSAppInfoPListFile = macOSAppContentsPath / "Info.plist";
                                 var macOSAppEntitlementsFile = macOSAppContentsPath / $"{SoftwareName}.entitlements";
+                                var icnsLogoFilePath = RootDirectory / "media" / $"{SoftwareName}.icns";
                                 macOSAppBinPath.CreateOrCleanDirectory();
+                                macOSAppResourcesPath.CreateOrCleanDirectory();
+                                icnsLogoFilePath.CopyToDirectory(macOSAppResourcesPath);
 
                                 runtimeBuild = runtimeBuild with { Runtime = "osx-multiarch", BundleType = BuildRuntime.BundleTypes.App };
                                 runtimeCacheFile.WriteJson(runtimeBuild);
@@ -285,9 +289,13 @@ public class Build : NukeBuild
                             var macOSAppPath = macOSRootAppPath / $"{SoftwareName}.app";
                             var macOSAppContentsPath = macOSAppPath / "Contents";
                             var macOSAppBinPath = macOSAppContentsPath / "MacOS";
+                            var macOSAppResourcesPath = macOSAppContentsPath / "Resources";
                             var macOSAppInfoPListFile = macOSAppContentsPath / "Info.plist";
                             var macOSAppEntitlementsFile = macOSAppContentsPath / $"{SoftwareName}.entitlements";
+                            var icnsLogoFilePath = RootDirectory / "media" / $"{SoftwareName}.icns";
                             macOSRootAppPath.CreateOrCleanDirectory();
+                            macOSAppResourcesPath.CreateOrCleanDirectory();
+                            icnsLogoFilePath.CopyToDirectory(macOSAppResourcesPath);
 
                             runtimeBuild = runtimeBuild with { BundleType = BuildRuntime.BundleTypes.App };
                             runtimeCacheFile.WriteJson(runtimeBuild);
@@ -432,10 +440,12 @@ public class Build : NukeBuild
                             var macOSRootAppPath = PublishDirectory / $"{SoftwareName}_osx-multiarch_v{SoftwareVersion}.app";
                             var macOSAppPath = macOSRootAppPath / $"{SoftwareName}.app";
                             var macOSAppContentsPath = macOSAppPath / "Contents";
+                            var macOSAppResourcesPath = macOSAppContentsPath / "Resources";
                             var macOSAppX64BinPath = macOSAppContentsPath / "MacOS" / "osx-x64";
                             var macOSAppArm64BinPath = macOSAppContentsPath / "MacOS" / "osx-arm64";
                             var macOSAppSharedBinPath = macOSAppContentsPath / "MacOS" / "shared";
                             macOSAppSharedBinPath.CreateOrCleanDirectory();
+                            macOSAppResourcesPath.CreateOrCleanDirectory();
 
                             var files = macOSAppX64BinPath.GlobFiles("**");
                             Parallel.ForEach(files, x64File =>

@@ -85,15 +85,15 @@
                                           Header="Github"
                                           Icon="{icon:MaterialIconExt Kind=Github}" />
                                 <MenuItem Command="{Binding LaunchUriCommand}"
-                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.ProcessName}, StringFormat='https://www.reddit.com/search/?q={0}&amp;type=posts&amp;sort=new'}"
+                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.AssemblyProduct}, StringFormat='https://www.reddit.com/search/?q={0}&amp;type=posts&amp;sort=new'}"
                                           Header="Reddit"
                                           Icon="{icon:MaterialIconExt Kind=Reddit}" />
                                 <MenuItem Command="{Binding LaunchUriCommand}"
-                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.ProcessName}, StringFormat='https://x.com/search?q={0}&amp;src=typed_query&amp;f=live'}"
+                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.AssemblyProduct}, StringFormat='https://x.com/search?q={0}&amp;src=typed_query&amp;f=live'}"
                                           Header="Twitter"
                                           Icon="{icon:MaterialIconExt Kind=Twitter}" />
                                 <MenuItem Command="{Binding LaunchUriCommand}"
-                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.ProcessName}, StringFormat='https://www.youtube.com/results?search_query={0}'}"
+                                          CommandParameter="{Binding Source={x:Static updatum:EntryApplication.AssemblyProduct}, StringFormat='https://www.youtube.com/results?search_query={0}'}"
                                           Header="Youtube"
                                           Icon="{icon:MaterialIconExt Kind=Youtube}" />
                             </MenuItem>

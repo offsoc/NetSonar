@@ -77,6 +77,7 @@ public partial class App
             WriteLine(e);
         }
 
+        AppSettings.Save();
         Environment.Exit(-1);
     }
 

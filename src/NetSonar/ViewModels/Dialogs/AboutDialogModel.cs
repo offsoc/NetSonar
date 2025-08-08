@@ -84,7 +84,7 @@ public partial class AboutDialogModel : DialogViewModelBase
                                                  Processor Cores: {ProcessorCount}
                                                  Memory RAM: {MemoryRamDescription}
                                                  Framework: {FrameworkDescription}
-                                                 UI Framework: {AvaloniaUIDescription}
+                                                 AvaloniaUI: {AvaloniaUIDescription}
                                                  Screen(s): {ScreensDescription}
                                                  """;
 
