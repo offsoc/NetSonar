@@ -1,4 +1,4 @@
-# v0.1.1 (/08/2025)
+# v0.1.1 (08/08/2025)
 
 - Fix settings not being saved if app crashes
 - macOS: Fix missing app icon
