@@ -1,18 +1,20 @@
-<UserControl xmlns="https://github.com/avaloniaui"
+<UserControl x:Class="NetSonar.Avalonia.Views.Fragments.PingableServiceGraphFragment"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:fragments="clr-namespace:NetSonar.Avalonia.ViewModels.Fragments"
              xmlns:lvc="clr-namespace:LiveChartsCore.SkiaSharpView.Avalonia;assembly=LiveChartsCore.SkiaSharpView.Avalonia"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-             x:Class="NetSonar.Avalonia.Views.Fragments.PingableServiceGraphFragment"
-             x:DataType="fragments:PingableServiceGraphFragmentModel">
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             x:DataType="fragments:PingableServiceGraphFragmentModel"
+             mc:Ignorable="d">
     <Design.DataContext>
-        <fragments:PingableServiceGraphFragmentModel/>
+        <fragments:PingableServiceGraphFragmentModel />
     </Design.DataContext>
     <lvc:CartesianChart Name="ResponseTimeGraph"
+                        EasingFunction="{Binding EasingFunction}"
                         Series="{Binding GraphSeries}"
                         XAxes="{Binding GraphXAxes}"
-                        YAxes="{Binding GraphYAxes}"
-                        EasingFunction="{Binding EasingFunction}"/>
+                        YAxes="{Binding GraphYAxes}" />
 </UserControl>

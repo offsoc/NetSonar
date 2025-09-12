@@ -205,7 +205,8 @@ public class Build : NukeBuild
                     if (rid.EndsWith("-arm64"))
                     {
                         arch = "arm64";
-                        archAlt = "aarch64";
+                        //archAlt = "aarch64";
+                        archAlt = "arm_aarch64 ";
                     }
 
                     if (RuntimeInformation.OSArchitecture is Architecture.Arm or Architecture.Arm64 or Architecture.Armv6)

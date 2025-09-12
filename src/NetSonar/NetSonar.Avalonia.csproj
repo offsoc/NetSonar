@@ -36,14 +36,14 @@
         <PackageReference Include="Material.Icons.Avalonia" Version="3.0.0-preview3.1" />
 
         <!-- UI Theme -->
-        <PackageReference Include="SukiUI" Version="6.0.3-nightly20250808" />
-        <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.0.3" />
+        <PackageReference Include="SukiUI" Version="6.0.4-nightly20250911" />
+        <PackageReference Include="Svg.Controls.Avalonia" Version="11.3.0.4" />
 
         <!-- Microsoft -->
         <PackageReference Include="System.Net.Ping" Version="4.3.0" />
-        <PackageReference Include="System.Text.Json" Version="9.0.8" />
+        <PackageReference Include="System.Text.Json" Version="9.0.9" />
         <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.9" />
 
         <!-- Collections -->
         <PackageReference Include="MintPlayer.ObservableCollection" Version="9.3.4" />

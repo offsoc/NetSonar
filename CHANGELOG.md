@@ -1,3 +1,8 @@
+# v0.1.2 (12/09/2025)
+- Add a GridSplitter to be able to resize the layout of services page (#6)
+- Upgrade AvaloniaUI from 11.3.3 to 11.3.5
+- Upgrade .NET from 9.0.8 to 9.0.9
+
 # v0.1.1 (08/08/2025)
 
 - Fix settings not being saved if app crashes

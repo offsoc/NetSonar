@@ -18,7 +18,7 @@
           RowDefinitions="*,Auto,*">
 
         <suki:GlassCard Grid.Row="0"
-                        Margin="15">
+                        Margin="15,15,15,10">
             <suki:GroupBox>
                 <suki:GroupBox.Header>
                     <Grid ColumnDefinitions="*,Auto"
@@ -252,7 +252,6 @@
                 </suki:GroupBox.Header>
 
                 <DataGrid Name="ServicesGrid"
-                          MinHeight="200"
                           CanUserReorderColumns="True"
                           CanUserResizeColumns="True"
                           CanUserSortColumns="True"
@@ -608,16 +607,20 @@
             </suki:GroupBox>
         </suki:GlassCard>
 
+
+        <GridSplitter Grid.Row="1"
+                      Margin="30,0" />
+
         <!--  Pings  -->
         <!--  Pings  -->
         <!--  Pings  -->
         <Grid Grid.Row="2"
-              ColumnDefinitions="*,*"
+              ColumnDefinitions="*,Auto,*"
               RowDefinitions="*">
 
             <suki:GlassCard Grid.Row="0"
                             Grid.Column="0"
-                            Margin="15">
+                            Margin="15,10,10,15">
                 <suki:GroupBox>
                     <suki:GroupBox.Header>
                         <Grid ColumnDefinitions="*,Auto"
@@ -719,7 +722,6 @@
                     </suki:GroupBox.Header>
                     <Panel>
                         <DataGrid Name="PingRepliesGrid"
-                                  MinHeight="200"
                                   CanUserReorderColumns="True"
                                   CanUserResizeColumns="True"
                                   CanUserSortColumns="True"
@@ -783,9 +785,13 @@
                 </suki:GroupBox>
             </suki:GlassCard>
 
+            <GridSplitter Grid.Row="0"
+                          Grid.Column="1"
+                          Margin="0,30" />
+
             <suki:GlassCard Grid.Row="0"
-                            Grid.Column="1"
-                            Margin="15">
+                            Grid.Column="2"
+                            Margin="10,10,15,15">
                 <suki:GroupBox>
                     <suki:GroupBox.Header>
 

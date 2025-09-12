@@ -38,6 +38,10 @@
                          Color="#FF660066" />
     </Styles.Resources>
 
+    <Style Selector="GridSplitter">
+        <Setter Property="Opacity" Value="0.05" />
+    </Style>
+
 
     <Style Selector="suki|SukiDialog">
         <Setter Property="Margin" Value="50,30,50,50" />
